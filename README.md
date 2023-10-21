@@ -3,6 +3,8 @@ Most Recent on top
 
 Project Log:
 
+-- 10/21/23 added a park button on the main screen, added some project 4 location code
+
 -- 10/20/23 - Added a bottom menu bar via android @menu, added assets for the menu icons from the android studio stock assets (nick)
 
 -- 10/19/23 - Removed ADA dataset, only 2 spaces, with one being way away, in Madison have non-24hr restriction. Found commonalities, cleaning data, making DB file to share. DB file created, shared in Google Drive (Brian)
