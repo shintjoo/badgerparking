@@ -3,7 +3,7 @@ Most Recent on top
 
 Project Log:
 
--- 10/21/23 added a park button on the main screen, added some project 4 location code
+-- 10/21/23 added a park button on the main screen, added some project 4 location code (nick)
 
 -- 10/20/23 - Added a bottom menu bar via android @menu, added assets for the menu icons from the android studio stock assets (nick)
 
