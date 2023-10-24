@@ -4,11 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,10 +19,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,12 +36,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //context instance field is useful bc a lot of helper classes will need it
+        //context instance field is useful - a lot of helper classes and functions will need it
+        //eg. intent = new Intent(context, destination.class);
         context = this;
 
         instantiateLocationServices();
         instantiateMenuBar();
         instantiateAnnounce();
+        setupParkButton();         //park button needs to be after location services
+
     }
 
     /**
@@ -56,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         annButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, AnnouncementsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AnnouncementsActivity.class);
                 startActivity(intent);
             }
         });
@@ -70,13 +78,12 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             try {
             rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
-            //just one on the main page right now, but we can easily add more through listView
                 annText =
-                        String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
-
+                        String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
+                                rssParser.getItem(0).getPubDate());
             }
             catch (Exception e) {
-                annText = "no new announcements can be loaded!";
+                annText = "No new announcements can be loaded!";
             }
 
             runOnUiThread(new Runnable() {
@@ -98,14 +105,16 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
+    public Location savedLocation;
+    public Address savedAddress;
 
     //project 4 location code
     public void instantiateLocationServices(){
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) this.getSystemService(getApplicationContext().LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-//                updateLocationInfo(location);
+                updateLocationInfo(location);
             }
 
             @Override
@@ -134,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (location!=null){
-//                    updateLocationInfo(location);
+                    updateLocationInfo(location);
                 }
             }
         }
@@ -156,6 +165,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void updateLocationInfo(Location location){
+        savedLocation = location;
+        Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+        try {
+            List<Address> listAddresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * =====================================================
+     * <------------------- PARK BUTTON ------------------->
+     * =====================================================
+     */
+
+    public Address parkedAddress;
+    public Location parkedLocation;
+
+    public void setupParkButton(){
+        ImageButton parkButton = findViewById(R.id.parkButton);
+        parkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                parkedAddress = savedAddress;
+                parkedLocation = savedLocation;
+            }
+        });
+    }
+
+
+
     /**
      * ==================================================
      * <------------------- MENU BAR ------------------->
@@ -171,24 +215,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.mHome){
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     return true;
                 }
                 if (item.getItemId() == R.id.mMap){
-                    Intent intent = new Intent(context, MapActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MapActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSearch){
-                    Intent intent = new Intent(context, SearchActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSettings){
-                    Intent intent = new Intent(context, SettingsActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                     startActivity(intent);
                     return true;
                 }
@@ -196,8 +240,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
 }
