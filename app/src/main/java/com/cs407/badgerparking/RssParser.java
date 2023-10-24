@@ -15,9 +15,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import android.content.Context;
 import android.util.Log;
 
-//i copied this code from this
+//this code is sourced from:
 //https://stackoverflow.com/questions/6093975/how-to-build-a-rss-reader-for-android
-//idk what the typical form for accredation is for copy paste
 
 public class RssParser extends DefaultHandler {
 
@@ -86,9 +85,6 @@ public class RssParser extends DefaultHandler {
             return guid;
         }
     }
-
-
-
 
     public class Channel {
         public String title;
@@ -295,7 +291,6 @@ public class RssParser extends DefaultHandler {
             content = null;
         }
     }
-
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {

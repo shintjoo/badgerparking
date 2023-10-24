@@ -39,24 +39,24 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.mHome){
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     return true;
                 }
                 if (item.getItemId() == R.id.mMap){
-                    Intent intent = new Intent(context, MapActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MapActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSearch){
-                    Intent intent = new Intent(context, SearchActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSettings){
-                    Intent intent = new Intent(context, SettingsActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                     startActivity(intent);
                     return true;
                 }
