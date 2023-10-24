@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             try {
             rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
                 annText =
-                        String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
+                        String.format("%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
                                 rssParser.getItem(0).getPubDate());
             }
             catch (Exception e) {
