@@ -16,6 +16,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,8 +48,19 @@ public class MainActivity extends AppCompatActivity {
     private RssParser rssParser;
     private ParserRunnable parseRun;
     private String annText;
+    private Button annButton;
 
     public void instantiateAnnounce(){
+
+        annButton = findViewById(R.id.annViewButton);
+        annButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, AnnouncementsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         parseRun = new ParserRunnable();
         new Thread(parseRun).start();
     }
@@ -57,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             try {
             rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
-
             //just one on the main page right now, but we can easily add more through listView
-
                 annText =
                         String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
 
@@ -77,11 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
     }
-
 
     /**
      * ===========================================================
@@ -159,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void instantiateMenuBar(){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.mHome);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
