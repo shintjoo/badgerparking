@@ -13,7 +13,6 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    BottomNavigationView bottomNavigationView;
     private Context context;
 
     @Override
@@ -25,6 +24,13 @@ public class SettingsActivity extends AppCompatActivity {
         instantiateMenuBar();
     }
 
+
+    /**
+     * ==================================================
+     * <------------------- MENU BAR ------------------->
+     * ==================================================
+     */
+    private BottomNavigationView bottomNavigationView;
 
     public void instantiateMenuBar(){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

@@ -3,6 +3,8 @@ Most Recent on top
 
 Project Log:
 
+-- 10/24/23 - added RSS compatibility to display news from madison street engineering
+
 -- 10/23/23 - made the menu bar work (nick)
 
 -- 10/21/23 - added a park button on the main screen, added some project 4 location code (nick)

@@ -1,7 +1,6 @@
 package com.cs407.badgerparking;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,50 +21,52 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
 
-    LocationManager locationManager;
-    LocationListener locationListener;
-    BottomNavigationView bottomNavigationView;
     private Context context;
-    RssParser rssParser;
-    ParserRunnable parseRun;
-    private String testText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //creates a context global for intents outside of onCreate
+        //context instance field is useful bc a lot of helper classes will need it
         context = this;
+
         instantiateLocationServices();
         instantiateMenuBar();
         instantiateAnnounce();
-
     }
+
+    /**
+     * =======================================================
+     * <------------------- ANNOUNCEMENTS ------------------->
+     * =======================================================
+     */
+
+    private RssParser rssParser;
+    private ParserRunnable parseRun;
+    private String annText;
 
     public void instantiateAnnounce(){
         parseRun = new ParserRunnable();
         new Thread(parseRun).start();
     }
 
+
     public class ParserRunnable implements Runnable{
         @Override
         public void run() {
             rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
 
-            testText =
+            annText =
                     String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     TextView test = (TextView) findViewById(R.id.firstAnView);
-                    Log.i("LOG", testText);
-                    test.setText(testText);
+                    Log.i("LOG", annText);
+                    test.setText(annText);
                 }
             });
         }
@@ -75,9 +76,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * ===========================================================
+     * <------------------- LOCATION SERVICES ------------------->
+     * ===========================================================
+     */
 
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
-    //I took the code from project 4's location manager, i just wanted to move it out of onCreate - nick
+    //project 4 location code
     public void instantiateLocationServices(){
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -133,6 +141,14 @@ public class MainActivity extends AppCompatActivity {
             startListening();
         }
     }
+
+    /**
+     * ==================================================
+     * <------------------- MENU BAR ------------------->
+     * ==================================================
+     */
+
+    private BottomNavigationView bottomNavigationView;
 
     public void instantiateMenuBar(){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

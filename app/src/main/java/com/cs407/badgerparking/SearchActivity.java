@@ -12,7 +12,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class SearchActivity extends AppCompatActivity {
-    BottomNavigationView bottomNavigationView;
     private Context context;
 
     @Override
@@ -25,6 +24,13 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * ==================================================
+     * <------------------- MENU BAR ------------------->
+     * ==================================================
+     */
+
+    private BottomNavigationView bottomNavigationView;
 
     public void instantiateMenuBar(){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
