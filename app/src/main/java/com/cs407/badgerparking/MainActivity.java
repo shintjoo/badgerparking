@@ -51,22 +51,29 @@ public class MainActivity extends AppCompatActivity {
         parseRun = new ParserRunnable();
         new Thread(parseRun).start();
     }
-
-
+    
     public class ParserRunnable implements Runnable{
         @Override
         public void run() {
+            try {
             rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
 
-            annText =
-                    String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
+            //just one on the main page right now, but we can easily add more through listView
+
+                annText =
+                        String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
+
+            }
+            catch (Exception e) {
+                annText = "no new announcements can be loaded!";
+            }
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    TextView test = (TextView) findViewById(R.id.firstAnView);
+                    TextView annTextView = (TextView) findViewById(R.id.firstAnView);
                     Log.i("LOG", annText);
-                    test.setText(annText);
+                    annTextView.setText(annText);
                 }
             });
         }
