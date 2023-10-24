@@ -16,8 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         //context instance field is useful bc a lot of helper classes will need it
         context = this;
+
         instantiateLocationServices();
         instantiateMenuBar();
         instantiateAnnounce();
@@ -47,31 +46,22 @@ public class MainActivity extends AppCompatActivity {
     private RssParser rssParser;
     private ParserRunnable parseRun;
     private String annText;
-    private Button toAnnButton;
 
     public void instantiateAnnounce(){
         parseRun = new ParserRunnable();
         new Thread(parseRun).start();
-        toAnnButton = findViewById(R.id.annViewButton);
-        toAnnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, AnnouncementsActivity.class);
-                startActivity(intent);
-            }
-
-        });
     }
-
-    private class ParserRunnable implements Runnable{
+    
+    public class ParserRunnable implements Runnable{
         @Override
         public void run() {
             try {
             rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
 
             //just one on the main page right now, but we can easily add more through listView
+
                 annText =
-                        String.format("%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
+                        String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
 
             }
             catch (Exception e) {
@@ -87,7 +77,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+
+
     }
+
 
     /**
      * ===========================================================
@@ -194,5 +188,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
 
 }
