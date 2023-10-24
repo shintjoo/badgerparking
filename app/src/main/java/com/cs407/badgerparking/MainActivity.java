@@ -15,10 +15,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     LocationListener locationListener;
     BottomNavigationView bottomNavigationView;
     private Context context;
+    RssParser rssParser;
+    ParserRunnable parseRun;
+    private String testText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +41,41 @@ public class MainActivity extends AppCompatActivity {
 
         //creates a context global for intents outside of onCreate
         context = this;
-
         instantiateLocationServices();
         instantiateMenuBar();
+        instantiateAnnounce();
+
     }
+
+    public void instantiateAnnounce(){
+        parseRun = new ParserRunnable();
+        new Thread(parseRun).start();
+    }
+
+    public class ParserRunnable implements Runnable{
+        @Override
+        public void run() {
+            rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
+
+            testText =
+                    String.format("Title:%s\nDate:%s\n", rssParser.getItem(0).getTitle(), rssParser.getItem(0).getPubDate());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView test = (TextView) findViewById(R.id.firstAnView);
+                    Log.i("LOG", testText);
+                    test.setText(testText);
+                }
+            });
+        }
+
+
+
+    }
+
+
+
 
     //I took the code from project 4's location manager, i just wanted to move it out of onCreate - nick
     public void instantiateLocationServices(){

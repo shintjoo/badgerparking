@@ -46,4 +46,18 @@
         app:srcCompat="@drawable/ic_park_button"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <TextView
+        android:id="@+id/firstAnView"
+        android:layout_width="378dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="55dp"
+        android:text="display annoucnment here"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/parkButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
