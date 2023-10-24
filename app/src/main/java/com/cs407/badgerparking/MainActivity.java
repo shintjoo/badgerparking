@@ -1,5 +1,6 @@
 package com.cs407.badgerparking;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -196,8 +197,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     /**
      * ==================================================
