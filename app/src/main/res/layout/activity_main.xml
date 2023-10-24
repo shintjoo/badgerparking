@@ -52,12 +52,25 @@
         android:layout_height="53dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="55dp"
-        android:text="display annoucnment here"
+        android:text="loading..."
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/parkButton" />
+
+    <Button
+        android:id="@+id/annViewButton"
+        android:layout_width="224dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="See More News"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstAnView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
