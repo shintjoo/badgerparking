@@ -3,7 +3,7 @@ Most Recent on top
 
 Project Log:
 
--- 10/24/23 - added RSS compatibility to display news from madison street engineering (nick)
+-- 10/24/23 - added RSS compatibility to display news from madison street engineering, added a news page (nick)
 
 -- 10/23/23 - made the menu bar work (nick)
 
