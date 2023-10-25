@@ -30,37 +30,9 @@ public class SearchActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
-    public void instantiateMenuBar(Context context){
+    public void instantiateMenuBar(Context context) {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.mSearch);
-
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.mHome){
-                    Intent intent = new Intent(context, MainActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                if (item.getItemId() == R.id.mMap){
-                    Intent intent = new Intent(context, MapActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-
-                if (item.getItemId() == R.id.mSearch){
-                    Intent intent = new Intent(context, SearchActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-
-                if (item.getItemId() == R.id.mSettings){
-                    Intent intent = new Intent(context, SettingsActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                return false;
-            }
-        });
+        MenuBarManager manager = new MenuBarManager(bottomNavigationView);
+        manager.instantiate(context, 'S');
     }
 }
