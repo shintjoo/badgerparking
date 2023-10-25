@@ -36,13 +36,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //context instance field is useful - a lot of helper classes and functions will need it
-        //eg. intent = new Intent(context, destination.class);
-        context = this;
-
         instantiateLocationServices();
-        instantiateMenuBar();
-        instantiateAnnounce();
+        instantiateMenuBar(this);
+        instantiateAnnounce(this);
         setupParkButton();         //park button needs to be after location services
 
     }
@@ -58,13 +54,13 @@ public class MainActivity extends AppCompatActivity {
     private String annText;
     private Button annButton;
 
-    public void instantiateAnnounce(){
+    public void instantiateAnnounce(Context context){
 
         annButton = findViewById(R.id.annViewButton);
         annButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AnnouncementsActivity.class);
+                Intent intent = new Intent(context, AnnouncementsActivity.class);
                 startActivity(intent);
             }
         });
@@ -206,31 +202,31 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
-    public void instantiateMenuBar(){
+    public void instantiateMenuBar(Context context){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.mHome);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.mHome){
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(context, MainActivity.class);
                     startActivity(intent);
                     return true;
                 }
                 if (item.getItemId() == R.id.mMap){
-                    Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                    Intent intent = new Intent(context, MapActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSearch){
-                    Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                    Intent intent = new Intent(context, SearchActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSettings){
-                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                    Intent intent = new Intent(context, SettingsActivity.class);
                     startActivity(intent);
                     return true;
                 }

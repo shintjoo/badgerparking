@@ -12,15 +12,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MapActivity extends AppCompatActivity {
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        context = this;
-        instantiateMenuBar();
+        instantiateMenuBar(this);
     }
 
 
@@ -31,7 +29,7 @@ public class MapActivity extends AppCompatActivity {
      */
     private BottomNavigationView bottomNavigationView;
 
-    public void instantiateMenuBar(){
+    public void instantiateMenuBar(Context context){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.mMap);
 
@@ -39,24 +37,24 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.mHome){
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(context, MainActivity.class);
                     startActivity(intent);
                     return true;
                 }
                 if (item.getItemId() == R.id.mMap){
-                    Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                    Intent intent = new Intent(context, MapActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSearch){
-                    Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                    Intent intent = new Intent(context, SearchActivity.class);
                     startActivity(intent);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.mSettings){
-                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                    Intent intent = new Intent(context, SettingsActivity.class);
                     startActivity(intent);
                     return true;
                 }
