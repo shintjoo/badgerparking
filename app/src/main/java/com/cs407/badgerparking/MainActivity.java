@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,11 +22,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,7 +48,44 @@ public class MainActivity extends AppCompatActivity {
         instantiateAnnounce(this);
         setupParkButton();         //park button needs to be after location services
 
+        //for clock management
+        TextView clock = findViewById(R.id.clockDisplay);
+        Button adjustTime = findViewById(R.id.adjustTime);
+        adjustTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar currentTime = Calendar.getInstance();
+                int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = currentTime.get(Calendar.MINUTE);
+                TimePickerDialog timePicker;
+                timePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
+                        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+                        sharedPreferences.edit().putInt("hours", hours).apply();
+                        sharedPreferences.edit().putInt("minutes", minutes).apply();
+                    }
+                }, hour, minute, true);
+            }
+        });
     }
+
+    public void updateTime(){
+        int currHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int currMin = Calendar.getInstance().get(Calendar.MINUTE);
+        TextView clock = findViewById(R.id.clockDisplay);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+
+        int setHour = sharedPreferences.getInt("hours", 0);
+        int setMin = sharedPreferences.getInt("minutes", 0);
+
+        int remHour = 23 - (currHour - setHour);
+        int remMin = 60 - (currMin - setMin);
+
+        clock.setText(remHour + ":" + remMin);
+    }
+
 
     /**
      * =======================================================
