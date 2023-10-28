@@ -2,6 +2,7 @@
 Most Recent on top
 
 Project Log:
+--10/28/23 - add timer and button to adjust timer to main activity, time selected is stored in shared preferences and will used to calculate the time remaining when the app is run. However there is still an issue with calculating the time remaining between days. There is no way to set and store dates as of yet. (Daniel)
 
 -- 10/24/23 - added RSS compatibility to display news from madison street engineering, added a news page (nick)
 
