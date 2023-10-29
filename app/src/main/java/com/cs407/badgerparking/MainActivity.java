@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         instantiateMenuBar(this);
         instantiateAnnounce(this);
         setupParkButton();         //park button needs to be after location services
+        dbHelper = new DatabaseHelper(this); // Instantiating restriction database
 
 
         // Initializing the mMap
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+
+
 
 
 
@@ -277,16 +281,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public Address parkedAddress;
     public Location parkedLocation;
 
-    public void setupParkButton(){
+    private DatabaseHelper dbHelper;
+
+    public void setupParkButton() {
         ImageButton parkButton = findViewById(R.id.parkButton);
         parkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 parkedAddress = savedAddress;
                 parkedLocation = savedLocation;
+
+                // Check if parkedLocation is not null
+                if (parkedLocation != null) {
+                    // Get the parking restriction based on the user's location
+                    String restriction = dbHelper.getParkingRestriction(parkedLocation.getLatitude(), parkedLocation.getLongitude());
+
+                    // Here, you can use the obtained restriction string.
+                    // For example, display it in a Toast or any other UI element:
+                    Toast.makeText(getApplicationContext(), restriction, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
+
 
     /**
      * ==================================================
