@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -77,6 +79,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Calendar currentTime = Calendar.getInstance();
                 int hour = currentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = currentTime.get(Calendar.MINUTE);
+                int year = currentTime.get(Calendar.YEAR);
+                int month = currentTime.get(Calendar.MONTH);
+                int day = currentTime.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePicker = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int selYear, int selMonth, int selDay) {
+                        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+                        sharedPreferences.edit().putInt("year", selYear).putInt("month", selMonth).putInt("day", selDay).apply();
+                    }
+                }, year, month, day);
+
                 TimePickerDialog timePicker;
                 timePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -86,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         sharedPreferences.edit().putInt("minutes", minutes).apply();
                     }
                 }, hour, minute, true);
+
+
             }
         });
     }
