@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static String DB_PATH = ""; // It should be empty initially, I'll adjust it below.
+    private static String DB_PATH; // No initial value required here.
     private static String DB_NAME = "parkingData.db";
     private SQLiteDatabase myDatabase;
     private final Context myContext;
@@ -20,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, 1);
         this.myContext = context;
-        DB_PATH = myContext.getDatabasePath(DB_NAME).toString(); // Adjust the path here.
+        DB_PATH = myContext.getDatabasePath(DB_NAME).getAbsolutePath(); // This sets the correct path for the Android device.
         createDatabase();
     }
 

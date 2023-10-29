@@ -307,6 +307,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 parkedAddress = savedAddress;
                 parkedLocation = savedLocation;
 
+
+                if (parkedLocation == null) {
+                    Toast.makeText(getApplicationContext(), "Location not available. Please wait and try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 // Check if parkedLocation is not null
                 if (parkedLocation != null) {
                     // Get the parking restriction based on the user's location
