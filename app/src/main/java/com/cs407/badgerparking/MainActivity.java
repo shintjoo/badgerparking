@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import java.io.IOException;
@@ -35,8 +36,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,16 @@ public class MainActivity extends AppCompatActivity {
         instantiateMenuBar(this);
         instantiateAnnounce(this);
         setupParkButton();         //park button needs to be after location services
+
+
+        // Initializing the mMap
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
+
+
 
         //for clock management
         TextView clock = findViewById(R.id.clockDisplay);
@@ -112,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
         parseRun = new ParserRunnable();
         new Thread(parseRun).start();
     }
-    
+
+
     public class ParserRunnable implements Runnable{
         @Override
         public void run() {
@@ -143,10 +160,34 @@ public class MainActivity extends AppCompatActivity {
      * ===========================================================
      */
 
+
+
+
     private LocationManager locationManager;
     private LocationListener locationListener;
     public Location savedLocation;
     public Address savedAddress;
+
+    private GoogleMap mMap;
+
+
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        }
+
+        // Check if the last known location is not null, and if so, update the map's location
+        if (savedLocation != null) {
+            updateLocationInfo(savedLocation);
+        }
+    }
+
+
+
 
     //project 4 location code
     public void instantiateLocationServices(){
@@ -211,6 +252,15 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             List<Address> listAddresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (listAddresses != null && listAddresses.size() > 0) {
+                savedAddress = listAddresses.get(0);
+            }
+
+            // If mMap is not null and you have permissions, move the camera to the user's current location.
+            if (mMap != null && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 16));
+            }
         }
         catch (IOException e){
             e.printStackTrace();

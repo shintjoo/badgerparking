@@ -21,17 +21,18 @@
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-    <View
-        android:id="@+id/mapMockup"
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="411dp"
         android:layout_height="466dp"
-        android:background="#6FDF5B"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.135" />
+
+
 
     <ImageButton
         android:id="@+id/parkButton"
