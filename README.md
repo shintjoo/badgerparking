@@ -2,6 +2,7 @@
 Most Recent on top
 
 Project Log:
+--10/29/2023 - added ability to select a date when adjusting the timer, have not changed the logic of the clock display to reflect this yet (Daniel)
 
 --10/28/23 - Map follows user's live location, working on park button + backend api integration, then will fix map to properly fit screen (a little bit of white space on top). (Brian)
 
