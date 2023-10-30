@@ -1,5 +1,6 @@
 package com.cs407.badgerparking;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -18,11 +19,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
 
     public DatabaseHelper(Context context) {
-        super(context, DB_NAME, null, 1);
+        super(context, DB_NAME, null, 2);
         this.myContext = context;
-        DB_PATH = myContext.getDatabasePath(DB_NAME).getAbsolutePath(); // This sets the correct path for the Android device.
+        DB_PATH = context.getDatabasePath(DB_NAME).getAbsolutePath();
         createDatabase();
     }
+
+
 
     /**
      * Create database if it doesn't exist and copy it from assets.
@@ -77,6 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         myInput.close();
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // Leave this empty if you're not using it.
@@ -87,6 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Leave this empty if you're not using it.
     }
 
+    @SuppressLint("Range")
     public String getParkingRestriction(double lat, double lng) {
         String restriction = "No Data Available";
         SQLiteDatabase db = this.getReadableDatabase();

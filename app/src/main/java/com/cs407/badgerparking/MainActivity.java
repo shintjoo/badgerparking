@@ -51,12 +51,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dbHelper = new DatabaseHelper(this); // Instantiating restriction database
 
         instantiateLocationServices();
         instantiateMenuBar(this);
         instantiateAnnounce(this);
         setupParkButton();         //park button needs to be after location services
-        dbHelper = new DatabaseHelper(this); // Instantiating restriction database
+
 
 
         // Initializing the mMap
@@ -64,10 +65,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
-
-
-
 
 
         //for clock management
