@@ -3,6 +3,8 @@ Most Recent on top
 
 Project Log:
 
+--10/30/2023 - Completed logic of the clock to display time remaing before the user will need to move their car, added refresh button as a temporary measure until I can find a functional way to automatically refresh the timer every minute (Daniel)
+
 -- 10/29/2023 - Communication with DB is very volitile at this state. Rounding DB lat/long down to work with google's lat/long. Will not push this update until I resolve this issue tat casues constant crashes as to not delay development time. I believe this issue lays with the active map in some way (it throws a billion gazillion log messages). (Brian)
 
 
