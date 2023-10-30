@@ -34,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +46,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,58 +68,73 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-        //for clock management
-        TextView clock = findViewById(R.id.clockDisplay);
+        //Creating fragments for adjusting the timer
+        updateTime();
         Button adjustTime = findViewById(R.id.adjustTime);
         adjustTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar currentTime = Calendar.getInstance();
-                int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = currentTime.get(Calendar.MINUTE);
-                int year = currentTime.get(Calendar.YEAR);
-                int month = currentTime.get(Calendar.MONTH);
-                int day = currentTime.get(Calendar.DAY_OF_MONTH);
+                com.cs407.badgerparking.DatePicker datePickerDialog = new com.cs407.badgerparking.DatePicker();
+                datePickerDialog.show(getSupportFragmentManager(), "DATE PICK");
 
-                DatePickerDialog datePicker = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int selYear, int selMonth, int selDay) {
-                        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
-                        sharedPreferences.edit().putInt("year", selYear).putInt("month", selMonth).putInt("day", selDay).apply();
-                    }
-                }, year, month, day);
-
-                TimePickerDialog timePicker;
-                timePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
-                        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
-                        sharedPreferences.edit().putInt("hours", hours).apply();
-                        sharedPreferences.edit().putInt("minutes", minutes).apply();
-                    }
-                }, hour, minute, true);
-
-
+                com.cs407.badgerparking.TimePicker timePickerDialog = new com.cs407.badgerparking.TimePicker();
+                timePickerDialog.show(getSupportFragmentManager(), "TIME PICK");
             }
         });
     }
 
+    /**
+     * =======================================================
+     * <----------------------- TIMER ----------------------->
+     * =======================================================
+     */
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth){
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, month);
+        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("year", year).putInt("month", month).putInt("day", dayOfMonth).apply();
+        updateTime();
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hour, int minute){
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("hour", hour).putInt("minute", minute).apply();
+    }
+
+    public void refresh(View view){
+        updateTime();
+    }
+
     public void updateTime(){
-        int currHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        int currMin = Calendar.getInstance().get(Calendar.MINUTE);
         TextView clock = findViewById(R.id.clockDisplay);
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
 
-        int setHour = sharedPreferences.getInt("hours", 0);
-        int setMin = sharedPreferences.getInt("minutes", 0);
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.YEAR, sharedPreferences.getInt("year", 0));
+        mCalendar.set(Calendar.MONTH, sharedPreferences.getInt("month", 0));
+        mCalendar.set(Calendar.DAY_OF_MONTH, sharedPreferences.getInt("day", 0));
+        mCalendar.set(Calendar.HOUR_OF_DAY, sharedPreferences.getInt("hour", 0));
+        mCalendar.set(Calendar.MINUTE, sharedPreferences.getInt("minute", 0));
 
-        int remHour = 23 - (currHour - setHour);
-        int remMin = 60 - (currMin - setMin);
+        Calendar currentTime = Calendar.getInstance();
+        Date currentDate = currentTime.getTime();
+        Date setDate = mCalendar.getTime();
 
-        clock.setText(remHour + ":" + remMin);
+        int difference = (int) (currentDate.getTime() - setDate.getTime())/1000;
+
+        int hours = difference/3600;
+
+        int remHour = 47 - hours;
+        int remMin = 60 - ((difference/60) - hours*60);
+
+        String display = remHour + ":" + remMin;
+        clock.setText(display);
     }
-
 
     /**
      * =======================================================
