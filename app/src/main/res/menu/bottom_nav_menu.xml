@@ -12,11 +12,11 @@
         android:icon="@drawable/ic_search"
         />
 
-    <item
+     <item
         android:id="@+id/mMap"
         android:title="Map"
         android:icon="@drawable/ic_map"
-        />
+      />
 
     <item
         android:id="@+id/mSettings"

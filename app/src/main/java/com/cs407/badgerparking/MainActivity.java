@@ -44,19 +44,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.*;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
 
+
+    private DatabaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dbHelper = new DatabaseHelper(this); // Instantiating restriction database
-
+        try {
+            dbHelper.copyDatabase();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         instantiateLocationServices();
         instantiateMenuBar(this);
         instantiateAnnounce(this);
-        setupParkButton();         //park button needs to be after location services
+       // setupParkButton();         //park button needs to be after location services
 
 
 
@@ -101,7 +108,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+
+
+
+        ImageButton parkButton = findViewById(R.id.parkButton);
+        parkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                parkedAddress = savedAddress;
+                parkedLocation = savedLocation;
+
+
+                if (parkedLocation == null) {
+                    Toast.makeText(getApplicationContext(), "Location not available. Please wait and try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Check if parkedLocation is not null
+                if (parkedLocation != null) {
+                    // Get the parking restriction based on the user's location
+                    String restriction = dbHelper.getParkingRestriction(parkedLocation.getLatitude(), parkedLocation.getLongitude());
+
+                    // Here, you can use the obtained restriction string.
+                    // For example, display it in a Toast or any other UI element:
+                    Toast.makeText(getApplicationContext(), restriction, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
+
+
 
     public void updateTime(){
         int currHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -290,11 +327,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * <------------------- PARK BUTTON ------------------->
      * =====================================================
      */
-
     public Address parkedAddress;
     public Location parkedLocation;
-
-    private DatabaseHelper dbHelper;
+/*
+   // private DatabaseHelper dbHelper;
 
     public void setupParkButton() {
         ImageButton parkButton = findViewById(R.id.parkButton);
@@ -322,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
+*/
 
     /**
      * ==================================================
