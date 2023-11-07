@@ -16,9 +16,7 @@ public class MenuBarManager {
 
     public MenuBarManager(BottomNavigationView menuBar){
         this.menuBar = menuBar;
-
     }
-
 
     public void instantiate(Context context, char select){
         setSelected(select);

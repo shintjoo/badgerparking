@@ -13,8 +13,6 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MapActivity extends AppCompatActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +20,6 @@ public class MapActivity extends AppCompatActivity {
         instantiateMenuBar(this);
 
     }
-
 
     /**
      * ==================================================

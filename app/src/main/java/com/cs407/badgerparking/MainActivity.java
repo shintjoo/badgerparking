@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.IconCompat;
+
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -12,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Icon;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -181,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button annButton;
 
     public void instantiateAnnounce(Context context){
-
         annButton = findViewById(R.id.annViewButton);
         annButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,7 +215,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void run() {
                     TextView annTextView = (TextView) findViewById(R.id.firstAnView);
-                    Log.i("LOG", annText);
                     annTextView.setText(annText);
                 }
             });
