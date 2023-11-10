@@ -43,6 +43,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -79,7 +83,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         //Creating fragments for adjusting the timer
+        ScheduledExecutorService execTimer = Executors.newScheduledThreadPool(1);
+        execTimer.scheduleAtFixedRate(new runClock() , 0, 1, TimeUnit.MINUTES);
         updateTime();
+        ScheduledExecutorService timer = Executors.newScheduledThreadPool(1);
         Button adjustTime = findViewById(R.id.adjustTime);
         adjustTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,8 +175,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         int remHour = 47 - hours;
         int remMin = 60 - ((difference/60) - hours*60);
 
-        String display = remHour + ":" + remMin;
+        String display;
+
+        if(remMin > 9) {
+            display = remHour + ":" + remMin;
+        }else{
+            display = remHour + ":0" + remMin;
+        }
         clock.setText(display);
+
+    }
+
+    class runClock implements Runnable{
+        @Override
+        public void run() {
+            updateTime();
+        }
     }
 
     /**

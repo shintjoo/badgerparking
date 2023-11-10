@@ -21,12 +21,6 @@
         android:theme="@style/Theme.Badgerparking"
         tools:targetApi="31">
         <activity
-            android:name=".SetTimerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
-        <activity
             android:name=".AnnouncementsActivity"
             android:exported="false" />
         <activity
