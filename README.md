@@ -3,6 +3,8 @@ Most Recent on top
 
 Project Log:
 
+--11/10/2023 - Timer will now update itself every minute- note that this doesn't line up with time change of the device clock, it just occurs every minute after the app is created
+
 --10/31/2023: Milestone 1 functionality complete, will tie to logic of timer. Based on location of user, they get the restrictions + a time of duration to park : ). (Brian) 
 
 --10/30/2023 - Completed logic of the clock to display time remaing before the user will need to move their car, added refresh button as a temporary measure until I can find a functional way to automatically refresh the timer every minute (Daniel)
