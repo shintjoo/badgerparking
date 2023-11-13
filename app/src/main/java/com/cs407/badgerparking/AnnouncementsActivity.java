@@ -57,7 +57,7 @@ public class AnnouncementsActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
+                rssParser = new RssParser("https://media.cityofmadison.com/Mediasite/FileServer/Podcast/2423db35926149fb8d161ed7f44256c117/feed.xml");
                 RssParser.Item item;
                 for (int i = 0; i < rssParser.getBounds(); i++){
                     item = rssParser.getItem(i);
@@ -70,8 +70,13 @@ public class AnnouncementsActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("LOG", "first " + rssParser.getItem(0).getPubDate().toString());
-                    Log.i("LOG", "last " + rssParser.getItem(rssParser.getBounds()).getPubDate().toString());
+                    try {
+                        Log.i("LOG", "first " + rssParser.getItem(0).getPubDate().toString());
+                        Log.i("LOG", "last " + rssParser.getItem(rssParser.getBounds()).getPubDate().toString());
+                    }
+                    catch (Exception e){
+                        Log.i("LOG", "shits messed");
+                    }
 
                     ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, annText);
                     ListView announcementsList = (ListView) findViewById(R.id.announcementsList);
