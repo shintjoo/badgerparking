@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">badgerparking</string>
+    <string name="rss_url">https://media.cityofmadison.com/Mediasite/FileServer/Podcast/ce9107f7b34a47fa82393d9881c83d8817/feed.xml</string>
 </resources>

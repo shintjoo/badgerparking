@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -45,10 +46,13 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private DatabaseHelper dbHelper;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
 
         dbHelper = new DatabaseHelper(this); // Instantiating restriction database
         try {
@@ -100,21 +104,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mCalendar.set(Calendar.YEAR, year);
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("year", year).putInt("month", month).putInt("day", dayOfMonth).apply();
         updateTime();
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hour, int minute){
-        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("hour", hour).putInt("minute", minute).apply();
     }
 
     public void updateTime(){
         TextView clock = findViewById(R.id.clockDisplay);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
 
         Calendar mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.YEAR, sharedPreferences.getInt("year", 0));
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void run() {
             try {
 
-                RssParser rssParser = new RssParser("https://media.cityofmadison.com/Mediasite/FileServer/Podcast/ce9107f7b34a47fa82393d9881c83d8817/feed.xml");
+                RssParser rssParser = new RssParser(getResources().getString(R.string.rss_url));
                 annText =
                         String.format("%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
                                 rssParser.getItem(0).getPubDate());
@@ -333,7 +334,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     String restriction = dbHelper.getParkingRestriction(parkedLocation.getLatitude(), parkedLocation.getLongitude());
 
                     //Store current time for timer
-                    SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
                     LocalDateTime now =  LocalDateTime.now();
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
                     Log.d("Now", dtf.format(now));

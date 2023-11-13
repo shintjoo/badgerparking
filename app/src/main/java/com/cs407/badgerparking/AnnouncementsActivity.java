@@ -50,7 +50,7 @@ public class AnnouncementsActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                rssParser = new RssParser("https://media.cityofmadison.com/Mediasite/FileServer/Podcast/ce9107f7b34a47fa82393d9881c83d8817/feed.xml");
+                rssParser = new RssParser(getResources().getString(R.string.rss_url));
                 RssParser.Item item;
                 for (int i = 0; i < rssParser.getBounds(); i++){
                     item = rssParser.getItem(i);
