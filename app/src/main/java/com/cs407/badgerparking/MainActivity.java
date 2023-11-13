@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         instantiateLocationServices();
         instantiateMenuBar(this);
         instantiateAnnounce(this);
-       // setupParkButton();         //park button needs to be after location services
 
         // Initializing the mMap
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -99,48 +98,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        ImageButton parkButton = findViewById(R.id.parkButton);
-        parkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                parkedAddress = savedAddress;
-                parkedLocation = savedLocation;
+        setupParkButton();
 
-
-
-                if (parkedLocation == null) {
-                    Toast.makeText(getApplicationContext(), "Location not available. Please wait and try again.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                // Check if parkedLocation is not null
-                if (parkedLocation != null) {
-                    // Get the parking restriction based on the user's location
-                    String restriction = dbHelper.getParkingRestriction(parkedLocation.getLatitude(), parkedLocation.getLongitude());
-
-                    //Store current time for timer
-                    SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
-                    LocalDateTime now =  LocalDateTime.now();
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-                    Log.d("Now", dtf.format(now));
-                    Log.d("Now", String.valueOf(now.getYear()) + "/" + String.valueOf(now.getMonthValue())+ "/" + String.valueOf(now.getDayOfMonth()));
-                    Log.d("Now", String.valueOf(now.getHour()) + ":" + String.valueOf(now.getMinute()));
-
-                    sharedPreferences.edit().putInt("year", now.getYear())
-                            .putInt("month", now.getMonthValue() - 1)
-                            .putInt("day", now.getDayOfMonth())
-                            .putInt("hour", now.getHour())
-                            .putInt("minute", now.getMinute()).apply();
-                    updateTime();
-
-                    // Here, you can use the obtained restriction string.
-                    // For example, display it in a Toast or any other UI element:
-                    Toast.makeText(getApplicationContext(), restriction, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
 
     }
+
 
     /**
      * =======================================================
@@ -373,17 +335,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     public Address parkedAddress;
     public Location parkedLocation;
-/*
-   // private DatabaseHelper dbHelper;
 
-    public void setupParkButton() {
+    public void setupParkButton(){
+
         ImageButton parkButton = findViewById(R.id.parkButton);
         parkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 parkedAddress = savedAddress;
                 parkedLocation = savedLocation;
-
 
                 if (parkedLocation == null) {
                     Toast.makeText(getApplicationContext(), "Location not available. Please wait and try again.", Toast.LENGTH_LONG).show();
@@ -395,6 +355,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     // Get the parking restriction based on the user's location
                     String restriction = dbHelper.getParkingRestriction(parkedLocation.getLatitude(), parkedLocation.getLongitude());
 
+                    //Store current time for timer
+                    SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+                    LocalDateTime now =  LocalDateTime.now();
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+                    Log.d("Now", dtf.format(now));
+                    Log.d("Now", String.valueOf(now.getYear()) + "/" + String.valueOf(now.getMonthValue())+ "/" + String.valueOf(now.getDayOfMonth()));
+                    Log.d("Now", String.valueOf(now.getHour()) + ":" + String.valueOf(now.getMinute()));
+
+                    sharedPreferences.edit().putInt("year", now.getYear())
+                            .putInt("month", now.getMonthValue() - 1)
+                            .putInt("day", now.getDayOfMonth())
+                            .putInt("hour", now.getHour())
+                            .putInt("minute", now.getMinute()).apply();
+                    updateTime();
+
                     // Here, you can use the obtained restriction string.
                     // For example, display it in a Toast or any other UI element:
                     Toast.makeText(getApplicationContext(), restriction, Toast.LENGTH_LONG).show();
@@ -402,8 +377,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-*/
-
     /**
      * ==================================================
      * <------------------- MENU BAR ------------------->

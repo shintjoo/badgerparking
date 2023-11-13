@@ -70,8 +70,8 @@ public class AnnouncementsActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    Log.i("LOG", "first " + rssParser.getItem(0).getPubDate().toString());
-//                    Log.i("LOG", "last " + rssParser.getItem(rssParser.getBounds()).getPubDate().toString());
+                    Log.i("LOG", "first " + rssParser.getItem(0).getPubDate().toString());
+                    Log.i("LOG", "last " + rssParser.getItem(rssParser.getBounds()).getPubDate().toString());
 
                     ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, annText);
                     ListView announcementsList = (ListView) findViewById(R.id.announcementsList);
