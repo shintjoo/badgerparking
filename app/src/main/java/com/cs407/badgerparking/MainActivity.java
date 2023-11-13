@@ -58,13 +58,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.*;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-
-
     private DatabaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         dbHelper = new DatabaseHelper(this); // Instantiating restriction database
         try {
             dbHelper.copyDatabase();
@@ -75,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         instantiateMenuBar(this);
         instantiateAnnounce(this);
        // setupParkButton();         //park button needs to be after location services
-
-
 
         // Initializing the mMap
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -264,10 +261,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * <------------------- LOCATION SERVICES ------------------->
      * ===========================================================
      */
-
-
-
-
     private LocationManager locationManager;
     private LocationListener locationListener;
     public Location savedLocation;
