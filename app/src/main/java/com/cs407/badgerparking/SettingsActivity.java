@@ -25,7 +25,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
 
-
         instantiateMenuBar(this);
         setupNotiBar();
 
@@ -57,7 +56,6 @@ public class SettingsActivity extends AppCompatActivity {
         notiBarClickManager();
 
     }
-
 
     public void notiBarClickManager(){
         View.OnClickListener notiOnClick = new View.OnClickListener() {

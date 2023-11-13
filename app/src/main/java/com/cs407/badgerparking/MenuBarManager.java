@@ -38,7 +38,6 @@ public class MenuBarManager {
         }
     }
 
-
     public NavigationBarView.OnItemSelectedListener menuClickListener(Context context) {
         return item -> {
             if (item.getItemId() == R.id.mHome){

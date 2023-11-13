@@ -89,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         setupParkButton();
-
-
     }
 
     /**
@@ -222,9 +220,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             updateLocationInfo(savedLocation);
         }
     }
-
-
-
 
     //project 4 location code
     public void instantiateLocationServices(){
