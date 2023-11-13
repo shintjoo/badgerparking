@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void run() {
             try {
-            rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
+            rssParser = new RssParser("https://media.cityofmadison.com/Mediasite/FileServer/Podcast/2423db35926149fb8d161ed7f44256c117/feed.xml");
                 annText =
                         String.format("%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
                                 rssParser.getItem(0).getPubDate());
