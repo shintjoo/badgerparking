@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapFragment.getMapAsync(this);
         }
 
-
         //Creating fragments for adjusting the timer
         ScheduledExecutorService execTimer = Executors.newScheduledThreadPool(1);
         execTimer.scheduleAtFixedRate(new runClock() , 0, 1, TimeUnit.MINUTES);
@@ -95,7 +94,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        setupParkButton();
+        ImageButton parkButton = findViewById(R.id.parkButton);
+        parkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                parkedAddress = savedAddress;
+                parkedLocation = savedLocation;
+
+                if (parkedLocation == null) {
+                    Toast.makeText(getApplicationContext(), "Location not available. Please wait and try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Check if parkedLocation is not null
+                if (parkedLocation != null) {
+                    // Get the parking restriction based on the user's location
+                    String restriction = dbHelper.getParkingRestriction(parkedLocation.getLatitude(), parkedLocation.getLongitude());
+
+                    //Store current time for timer
+                    LocalDateTime now =  LocalDateTime.now();
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+                    Log.d("Now", dtf.format(now));
+                    Log.d("Now", String.valueOf(now.getYear()) + "/" + String.valueOf(now.getMonthValue())+ "/" + String.valueOf(now.getDayOfMonth()));
+                    Log.d("Now", String.valueOf(now.getHour()) + ":" + String.valueOf(now.getMinute()));
+
+                    sharedPreferences.edit().putInt("year", now.getYear())
+                            .putInt("month", now.getMonthValue() - 1)
+                            .putInt("day", now.getDayOfMonth())
+                            .putInt("hour", now.getHour())
+                            .putInt("minute", now.getMinute()).apply();
+                    updateTime();
+
+                    // Here, you can use the obtained restriction string.
+                    // For example, display it in a Toast or any other UI element:
+                    Toast.makeText(getApplicationContext(), restriction, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+//        setupParkButton();
     }
 
     /*
@@ -346,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public Address parkedAddress;
     public Location parkedLocation;
 
+    /*
     public void setupParkButton(){
 
         ImageButton parkButton = findViewById(R.id.parkButton);
@@ -386,6 +424,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+     */
     /*
      * ==================================================
      * <------------------- MENU BAR ------------------->
