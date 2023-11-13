@@ -22,6 +22,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        requestNotiPermission();
+        setupNotifications();
+
         instantiateLocationServices();
         instantiateMenuBar(this);
         instantiateAnnounce(this);
@@ -91,7 +98,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupParkButton();
     }
 
-    /**
+    /*
+     * ===============================================================
+     * <----------------------- NOTIFICATIONS ----------------------->
+     * ===============================================================
+     */
+
+    private final ActivityResultLauncher<String> requestNotificationLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (!isGranted){
+                    Toast.makeText(this, "Please allow notifications", Toast.LENGTH_LONG).show();
+                }
+            });
+
+    private void requestNotiPermission(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED){
+            requestNotificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
+    }
+
+    private void setupNotifications(){
+        NotificationHelper.getInstance().createRemindNotificationChannel(getApplicationContext());
+    }
+
+
+    /*
      * =======================================================
      * <----------------------- TIMER ----------------------->
      * =======================================================
@@ -154,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    /**
+    /*
      * =======================================================
      * <------------------- ANNOUNCEMENTS ------------------->
      * =======================================================
@@ -194,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    /**
+    /*
      * ===========================================================
      * <------------------- LOCATION SERVICES ------------------->
      * ===========================================================
@@ -301,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    /**
+    /*
      * =====================================================
      * <------------------- PARK BUTTON ------------------->
      * =====================================================
@@ -349,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-    /**
+    /*
      * ==================================================
      * <------------------- MENU BAR ------------------->
      * ==================================================

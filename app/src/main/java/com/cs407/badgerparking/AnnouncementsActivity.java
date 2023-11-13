@@ -32,7 +32,7 @@ public class AnnouncementsActivity extends AppCompatActivity {
         instantiateAnnounce();
     }
 
-    /**
+    /*
      * =======================================================
      * <------------------- ANNOUNCEMENTS ------------------->
      * =======================================================

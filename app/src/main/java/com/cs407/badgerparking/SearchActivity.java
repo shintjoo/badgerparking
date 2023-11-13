@@ -15,7 +15,7 @@ public class SearchActivity extends AppCompatActivity {
         instantiateMenuBar(this);
     }
 
-    /**
+    /*
      * ==================================================
      * <------------------- MENU BAR ------------------->
      * ==================================================

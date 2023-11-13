@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.service.notification.NotificationListenerService;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -27,14 +28,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         instantiateMenuBar(this);
         setupNotiBar();
-
     }
+
 
     public void setupNotiBar(){
         b1 = findViewById(R.id.toggle1);
         b2 = findViewById(R.id.toggle2);
         b3 = findViewById(R.id.toggle3);
         b4 = findViewById(R.id.toggle4);
+
 
         //since creating the activity defaults the buttons to false, we only need to make them true
         if (sharedPreferences.getBoolean("5min_warning", false)){
@@ -61,6 +63,11 @@ public class SettingsActivity extends AppCompatActivity {
         View.OnClickListener notiOnClick = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                NotificationHelper.getInstance().setNotificationContent(getString(R.string.remind_noti_channel_id), "" + b1.isChecked() + " "
+                        + b2.isChecked() + " " + b3.isChecked() + " " + b4.isChecked());
+                NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
+
                 sharedPreferences.edit().putBoolean("5min_warning", b1.isChecked())
                                         .putBoolean("10min_warning", b2.isChecked())
                                         .putBoolean("15min_warning", b3.isChecked())
@@ -68,13 +75,16 @@ public class SettingsActivity extends AppCompatActivity {
                                         .apply();
             }
         };
+
         b1.setOnClickListener(notiOnClick);
         b2.setOnClickListener(notiOnClick);
         b3.setOnClickListener(notiOnClick);
         b4.setOnClickListener(notiOnClick);
     }
 
-    /**
+
+
+    /*
      * ==================================================
      * <------------------- MENU BAR ------------------->
      * ==================================================
