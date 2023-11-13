@@ -15,19 +15,27 @@ public class NotificationHelper {
         return INSTANCE;
     }
 
-    public static final String CHANNEL_ID = "channel_reminders";
+    public static final String REMIND_CHANNEL_ID = "channel_reminders";
 
-    public void createNotificationChannel(Context context) {
+    /*
+    * NotificationHelper is built using discrete notification channels just in case we want to send
+    * more than one kind of notification in the future
+    *
+    * If we need to add more, create a new method for createXNotificationChannel
+    * and make a new channel ID
+    * */
+
+    public void createRemindNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = "Reminders";
             String description = "All Time Reminders";
 
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
+            NotificationChannel remindChannel = new NotificationChannel(REMIND_CHANNEL_ID, name, importance);
+            remindChannel.setDescription(description);
 
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            notificationManager.createNotificationChannel(remindChannel);
         }
     }
 
