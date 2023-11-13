@@ -11,8 +11,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-
-import android.content.Context;
 import android.util.Log;
 
 //this code is sourced from:
@@ -25,8 +23,8 @@ public class RssParser extends DefaultHandler {
     private boolean         inImage;
     private boolean         inItem;
 
-    private ArrayList<Item> items   = new ArrayList<Item>();
-    private Channel         channel = new Channel();
+    private final ArrayList<Item> items   = new ArrayList<>();
+    private final Channel         channel = new Channel();
 
     private Item            lastItem;
 
@@ -40,13 +38,7 @@ public class RssParser extends DefaultHandler {
             xr.setContentHandler(this);
             xr.parse(new InputSource(sourceUrl.openStream()));
         }
-        catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        catch (SAXException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+        catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
     }

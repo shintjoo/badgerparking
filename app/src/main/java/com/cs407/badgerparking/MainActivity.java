@@ -1,12 +1,5 @@
 package com.cs407.badgerparking;
 
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.IconCompat;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -14,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Icon;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -23,24 +15,25 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,13 +42,6 @@ import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.*;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private DatabaseHelper dbHelper;
@@ -102,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
-
 
     /**
      * =======================================================
@@ -169,37 +154,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
     /**
      * =======================================================
      * <------------------- ANNOUNCEMENTS ------------------->
      * =======================================================
      */
 
-    private RssParser rssParser;
-    private ParserRunnable parseRun;
     private String annText;
-    private Button annButton;
 
     public void instantiateAnnounce(Context context){
-        annButton = findViewById(R.id.annViewButton);
-        annButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, AnnouncementsActivity.class);
-                startActivity(intent);
-            }
+        Button annButton = findViewById(R.id.annViewButton);
+        annButton.setOnClickListener(view -> {
+            Intent intent = new Intent(context, AnnouncementsActivity.class);
+            startActivity(intent);
         });
 
-        parseRun = new ParserRunnable();
+        ParserRunnable parseRun = new ParserRunnable();
         new Thread(parseRun).start();
     }
-
 
     public class ParserRunnable implements Runnable{
         @Override
         public void run() {
             try {
-            rssParser = new RssParser("https://media.cityofmadison.com/Mediasite/FileServer/Podcast/ce9107f7b34a47fa82393d9881c83d8817/feed.xml");
+
+                RssParser rssParser = new RssParser("https://media.cityofmadison.com/Mediasite/FileServer/Podcast/ce9107f7b34a47fa82393d9881c83d8817/feed.xml");
                 annText =
                         String.format("%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
                                 rssParser.getItem(0).getPubDate());
@@ -208,12 +188,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 annText = "No new announcements can be loaded!";
             }
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    TextView annTextView = (TextView) findViewById(R.id.firstAnView);
-                    annTextView.setText(annText);
-                }
+            runOnUiThread(() -> {
+                TextView annTextView = findViewById(R.id.firstAnView);
+                annTextView.setText(annText);
             });
         }
     }
@@ -224,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * ===========================================================
      */
     private LocationManager locationManager;
-    private LocationListener locationListener;
     public Location savedLocation;
     public Address savedAddress;
 
@@ -252,23 +228,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //project 4 location code
     public void instantiateLocationServices(){
         locationManager = (LocationManager) this.getSystemService(getApplicationContext().LOCATION_SERVICE);
-        locationListener = new LocationListener() {
+        LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 updateLocationInfo(location);
             }
 
             @Override
-            public void onStatusChanged(String s, int i, Bundle bundle){
-
-            }
-            @Override
-            public void onProviderEnabled(String s){
+            public void onStatusChanged(String s, int i, Bundle bundle) {
 
             }
 
             @Override
-            public void onProviderDisabled(String s){
+            public void onProviderEnabled(@NonNull String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(@NonNull String s) {
 
             }
         };

@@ -1,15 +1,9 @@
 package com.cs407.badgerparking;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -22,16 +16,14 @@ public class SettingsActivity extends AppCompatActivity {
         instantiateMenuBar(this);
     }
 
-
     /**
      * ==================================================
      * <------------------- MENU BAR ------------------->
      * ==================================================
      */
-    private BottomNavigationView bottomNavigationView;
-
     public void instantiateMenuBar(Context context) {
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         MenuBarManager manager = new MenuBarManager(bottomNavigationView);
         manager.instantiate(context, 'E');
     }
