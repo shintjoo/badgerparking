@@ -2,6 +2,8 @@
 Most Recent on top
 
 Project Log:
+--11/13/2023 - fixed issues with timer updating, now occurs every 15 seconds. Timer will now turn red when the time limit has been execeded (Daniel)
+
 --11/12/2023 - fixed constraints on menu bar, changed announcements source, cleaned up onCreate a bit (nick)
 
 --11/12/2023 - Clicking the park button will now update the timer automatically, refresh button has also been removed (Daniel)
