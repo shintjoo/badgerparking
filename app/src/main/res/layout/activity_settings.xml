@@ -2,21 +2,111 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity">
+    tools:context=".SettingsActivity"
+    tools:ignore="HardcodedText">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/frame"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:menu="@menu/bottom_nav_menu">
+        app:menu="@menu/bottom_nav_menu"
+        tools:ignore="VisualLintBottomNav"
+        tools:layout_editor_absoluteY="656dp">
+
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <TextView
+        android:id="@+id/settingsTitle"
+        android:layout_width="124dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="268dp"
+        android:text="Settings"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/notiSetSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:text="Send me a notification every:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsTitle" />
+
+    <LinearLayout
+        android:id="@+id/notiButtonHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/notEnabledGreen"
+        android:padding="2sp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notiSetSubTitle">
+
+        <ToggleButton
+            android:id="@+id/toggle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/notitime_toggle_button"
+            android:textOff="5 Mins"
+            android:textOn="5 Mins" />
+
+        <Space
+            android:layout_width="2sp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:id="@+id/toggle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/notitime_toggle_button"
+            android:textOff="10 Mins"
+            android:textOn="10 Mins" />
+
+        <Space
+            android:layout_width="2sp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:id="@+id/toggle3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/notitime_toggle_button"
+            android:textOff="15 Mins"
+            android:textOn="15 Mins" />
+
+        <Space
+            android:layout_width="2sp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:id="@+id/toggle4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/notitime_toggle_button"
+            android:textOff="20 Mins"
+            android:textOn="20 Mins" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

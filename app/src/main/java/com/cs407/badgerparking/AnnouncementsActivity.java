@@ -6,11 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -26,12 +24,9 @@ public class AnnouncementsActivity extends AppCompatActivity {
         context = this;
 
         Button backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, MainActivity.class);
-                startActivity(intent);
-            }
+        backButton.setOnClickListener(view -> {
+            Intent intent = new Intent(context, MainActivity.class);
+            startActivity(intent);
         });
 
         instantiateAnnounce();
@@ -44,12 +39,10 @@ public class AnnouncementsActivity extends AppCompatActivity {
      */
 
     private RssParser rssParser;
-    private AnnouncementsActivity.ParserRunnable parseRun;
-    private ArrayList<String> annText = new ArrayList<>();
-    private Button toAnnButton;
+    private final ArrayList<String> annText = new ArrayList<>();
 
     public void instantiateAnnounce(){
-        parseRun = new AnnouncementsActivity.ParserRunnable();
+        ParserRunnable parseRun = new ParserRunnable();
         new Thread(parseRun).start();
     }
 
@@ -57,7 +50,7 @@ public class AnnouncementsActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                rssParser = new RssParser("https://www.cityofmadison.com/feed/news/traffic-engineering");
+                rssParser = new RssParser(getResources().getString(R.string.rss_url));
                 RssParser.Item item;
                 for (int i = 0; i < rssParser.getBounds(); i++){
                     item = rssParser.getItem(i);
@@ -67,15 +60,18 @@ public class AnnouncementsActivity extends AppCompatActivity {
             catch (Exception e) {
                 annText.add("no new announcements can be loaded!");
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, annText);
-                    ListView announcementsList = (ListView) findViewById(R.id.announcementsList);
-                    announcementsList.setAdapter(adapter);
-
+            runOnUiThread(() -> {
+                try {
+                    Log.i("LOG", "first " + rssParser.getItem(0).getPubDate());
+                    Log.i("LOG", "last " + rssParser.getItem(rssParser.getBounds()).getPubDate());
                 }
+                catch (Exception e){
+                    Log.i("LOG", "announcements messed up");
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, annText);
+                ListView announcementsList = (ListView) findViewById(R.id.announcementsList);
+                announcementsList.setAdapter(adapter);
             });
         }
     }

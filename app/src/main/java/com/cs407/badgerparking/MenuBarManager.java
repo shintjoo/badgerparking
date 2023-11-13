@@ -3,16 +3,11 @@ package com.cs407.badgerparking;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MenuBarManager {
-    private BottomNavigationView menuBar;
+    private final BottomNavigationView menuBar;
 
     public MenuBarManager(BottomNavigationView menuBar){
         this.menuBar = menuBar;
@@ -43,35 +38,31 @@ public class MenuBarManager {
         }
     }
 
-
     public NavigationBarView.OnItemSelectedListener menuClickListener(Context context) {
-        return new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.mHome){
-                    Intent intent = new Intent(context, MainActivity.class);
-                    context.startActivity(intent);
-                    return true;
-                }
-                if (item.getItemId() == R.id.mMap){
-                    Intent intent = new Intent(context, MapActivity.class);
-                    context.startActivity(intent);
-                    return true;
-                }
-
-                if (item.getItemId() == R.id.mSearch){
-                    Intent intent = new Intent(context, SearchActivity.class);
-                    context.startActivity(intent);
-                    return true;
-                }
-
-                if (item.getItemId() == R.id.mSettings){
-                    Intent intent = new Intent(context, SettingsActivity.class);
-                    context.startActivity(intent);
-                    return true;
-                }
-                return false;
+        return item -> {
+            if (item.getItemId() == R.id.mHome){
+                Intent intent = new Intent(context, MainActivity.class);
+                context.startActivity(intent);
+                return true;
             }
+            if (item.getItemId() == R.id.mMap){
+                Intent intent = new Intent(context, MapActivity.class);
+                context.startActivity(intent);
+                return true;
+            }
+
+            if (item.getItemId() == R.id.mSearch){
+                Intent intent = new Intent(context, SearchActivity.class);
+                context.startActivity(intent);
+                return true;
+            }
+
+            if (item.getItemId() == R.id.mSettings){
+                Intent intent = new Intent(context, SettingsActivity.class);
+                context.startActivity(intent);
+                return true;
+            }
+            return false;
         };
     }
 }

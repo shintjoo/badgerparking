@@ -1,13 +1,11 @@
 package com.cs407.badgerparking;
 
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import androidx.core.graphics.drawable.IconCompat;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -16,7 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -25,9 +23,11 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -35,26 +35,32 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.*;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
 
     private DatabaseHelper dbHelper;
-    private final ScheduledExecutorService execTimer = Executors.newScheduledThreadPool(1);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         instantiateLocationServices();
         instantiateMenuBar(this);
         instantiateAnnounce(this);
-        // setupParkButton();         //park button needs to be after location services
+       // setupParkButton();         //park button needs to be after location services
+
 
 
         // Initializing the mMap
@@ -79,18 +86,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         //Creating fragments for adjusting the timer
-        Button adjustTime = findViewById(R.id.adjustTime);
-        adjustTime.setOnClickListener(view -> {
-            com.cs407.badgerparking.DatePicker datePickerDialog = new com.cs407.badgerparking.DatePicker();
-            datePickerDialog.show(getSupportFragmentManager(), "DATE PICK");
-
-            com.cs407.badgerparking.TimePicker timePickerDialog = new com.cs407.badgerparking.TimePicker();
-            timePickerDialog.show(getSupportFragmentManager(), "TIME PICK");
-        });
-
-        //Start running the timer
+        ScheduledExecutorService execTimer = Executors.newScheduledThreadPool(1);
+        execTimer.scheduleAtFixedRate(new runClock() , 0, 1, TimeUnit.MINUTES);
         updateTime();
-        runClock();
+        ScheduledExecutorService timer = Executors.newScheduledThreadPool(1);
+        Button adjustTime = findViewById(R.id.adjustTime);
+        adjustTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                com.cs407.badgerparking.DatePicker datePickerDialog = new com.cs407.badgerparking.DatePicker();
+                datePickerDialog.show(getSupportFragmentManager(), "DATE PICK");
+
+                com.cs407.badgerparking.TimePicker timePickerDialog = new com.cs407.badgerparking.TimePicker();
+                timePickerDialog.show(getSupportFragmentManager(), "TIME PICK");
+            }
+        });
 
         ImageButton parkButton = findViewById(R.id.parkButton);
         parkButton.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 parkedAddress = savedAddress;
                 parkedLocation = savedLocation;
+
 
 
                 if (parkedLocation == null) {
@@ -111,8 +122,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     String restriction = dbHelper.getParkingRestriction(parkedLocation.getLatitude(), parkedLocation.getLongitude());
 
                     //Store current time for timer
-                    SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badger parking", Context.MODE_PRIVATE);
-                    LocalDateTime now = LocalDateTime.now();
+                    SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+                    LocalDateTime now =  LocalDateTime.now();
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+                    Log.d("Now", dtf.format(now));
+                    Log.d("Now", String.valueOf(now.getYear()) + "/" + String.valueOf(now.getMonthValue())+ "/" + String.valueOf(now.getDayOfMonth()));
+                    Log.d("Now", String.valueOf(now.getHour()) + ":" + String.valueOf(now.getMinute()));
 
                     sharedPreferences.edit().putInt("year", now.getYear())
                             .putInt("month", now.getMonthValue() - 1)
@@ -136,26 +151,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * =======================================================
      */
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth){
         Calendar mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.YEAR, year);
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badger parking", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("year", year).putInt("month", month).putInt("day", dayOfMonth).apply();
         updateTime();
     }
 
     @Override
-    public void onTimeSet(TimePicker view, int hour, int minute) {
-        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badger parking", Context.MODE_PRIVATE);
+    public void onTimeSet(TimePicker view, int hour, int minute){
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("hour", hour).putInt("minute", minute).apply();
     }
 
-    public void updateTime() {
+    public void updateTime(){
         TextView clock = findViewById(R.id.clockDisplay);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badger parking", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
 
         Calendar mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.YEAR, sharedPreferences.getInt("year", 0));
@@ -164,42 +179,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mCalendar.set(Calendar.HOUR_OF_DAY, sharedPreferences.getInt("hour", 0));
         mCalendar.set(Calendar.MINUTE, sharedPreferences.getInt("minute", 0));
 
+        Log.d("Logged", sharedPreferences.getInt("year", 0) + "/" + sharedPreferences.getInt("month", 0) + "/" + sharedPreferences.getInt("day", 0)+ " " + sharedPreferences.getInt("hour", 0) + ":" + sharedPreferences.getInt("minute", 0));
+
         Calendar currentTime = Calendar.getInstance();
         Date currentDate = currentTime.getTime();
         Date setDate = mCalendar.getTime();
 
-        int difference = (int) (currentDate.getTime() - setDate.getTime()) / 1000;
+        int difference = (int) (currentDate.getTime() - setDate.getTime())/1000;
 
-        int hours = difference / 3600;
+        int hours = difference/3600;
 
         int remHour = 47 - hours;
-        int remMin = 60 - ((difference / 60) - hours * 60);
+        int remMin = 60 - ((difference/60) - hours*60);
 
         String display;
 
-        if (remMin > 9) {
+        if(remMin > 9) {
             display = remHour + ":" + remMin;
-        } else {
+        }else{
             display = remHour + ":0" + remMin;
-        }
-        if (remHour < 0) {
-            clock.setTextColor(Color.RED);
-        } else {
-            clock.setTextColor(Color.WHITE);
         }
         clock.setText(display);
 
     }
 
-    final Runnable ticker = () -> {
-        try {
+    class runClock implements Runnable{
+        @Override
+        public void run() {
             updateTime();
-        }catch(Exception exception){
-            Log.d("Error", exception.toString());
         }
-    };
-    public void runClock() {
-        execTimer.scheduleAtFixedRate(ticker, 0,15, SECONDS);
     }
 
     /**

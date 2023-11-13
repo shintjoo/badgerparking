@@ -2,8 +2,11 @@
 Most Recent on top
 
 Project Log:
+--11/12/2023 - fixed constraints on menu bar, changed announcements source, cleaned up onCreate a bit (nick)
 
---11/10/2023 - Timer will now update itself every minute- note that this doesn't line up with time change of the device clock, it just occurs every minute after the app is created
+--11/12/2023 - Clicking the park button will now update the timer automatically, refresh button has also been removed (Daniel)
+
+--11/10/2023 - Timer will now update itself every minute- note that this doesn't line up with time change of the device clock, it just occurs every minute after the app is created (Daniel)
 
 --10/31/2023: Milestone 1 functionality complete, will tie to logic of timer. Based on location of user, they get the restrictions + a time of duration to park : ). (Brian) 
 
