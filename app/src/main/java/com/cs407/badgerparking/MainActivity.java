@@ -268,8 +268,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         //if 00
-        if (remMin <= 5 && warnings[0] && (warningsShown & 6) == 6){
-            sharedPreferences.edit().putInt("warnings_displayed", -1)
+        if (remMin <= 5 && warnings[0] && (warningsShown & 6) == 6 && warningsShown != 14){
+            sharedPreferences.edit().putInt("warnings_displayed", 14)
                     .apply();
             timeFlag = 5;
         }
