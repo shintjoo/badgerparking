@@ -40,6 +40,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("warnings_displayed", 0)
+                .apply();
 
         dbHelper = new DatabaseHelper(this); // Instantiating restriction database
         try {
@@ -188,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void updateTime(){
         TextView clock = findViewById(R.id.clockDisplay);
 
-
         Calendar mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.YEAR, sharedPreferences.getInt("year", 0));
         mCalendar.set(Calendar.MONTH, sharedPreferences.getInt("month", 0));
@@ -216,8 +218,69 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }else{
             display = remHour + ":0" + remMin;
         }
+
+        if (remHour == 0 && remMin >= 1){
+            timerNotiManager(remMin);
+        }
+        if (remMin <= 1){
+            sharedPreferences.edit().putInt("warnings_displayed", 0)
+                    .apply();
+        }
+
+
         clock.setText(display);
 
+    }
+
+    //why in gods name did i chose to do it this way
+    private void timerNotiManager(int remMin){
+
+        boolean[] warnings = {
+                sharedPreferences.getBoolean("5min_warning", false),
+                sharedPreferences.getBoolean("10min_warning", false),
+                sharedPreferences.getBoolean("15min_warning", false),
+                sharedPreferences.getBoolean("20min_warning", false)
+        };
+
+        /* 0    2    4    6
+        *  00   01   10   11
+         */
+
+        int warningsShown = sharedPreferences.getInt("warnings_displayed", 00);
+        int timeFlag = -1;
+
+        if (remMin <= 20 && warnings[3] && (warningsShown & 6) == 0){
+            sharedPreferences.edit().putInt("warnings_displayed", 2)
+                    .apply();
+            timeFlag = 20;
+        }
+
+        if (remMin <= 15 && warnings[2] && (warningsShown & 6) == 2){
+            sharedPreferences.edit().putInt("warnings_displayed", 4)
+                    .apply();
+            timeFlag = 15;
+        }
+
+        if (remMin <= 10 && warnings[1] && (warningsShown & 6) == 4){
+            sharedPreferences.edit().putInt("warnings_displayed", 6)
+                    .apply();
+            timeFlag = 10;
+        }
+
+        //if 00
+        if (remMin <= 5 && warnings[0] && (warningsShown & 6) == 6){
+            sharedPreferences.edit().putInt("warnings_displayed", -1)
+                    .apply();
+            timeFlag = 5;
+        }
+
+        if (timeFlag != -1){
+            NotificationHelper.getInstance().setNotificationContent(getString(R.string.remind_noti_channel_id),
+                    timeFlag + " minutes left!");
+
+            NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
+            timeFlag = -1;
+        }
     }
 
     class runClock implements Runnable{
