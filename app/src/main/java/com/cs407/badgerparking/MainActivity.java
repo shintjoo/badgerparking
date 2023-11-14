@@ -246,30 +246,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         *  00   01   10   11
          */
 
-        int warningsShown = sharedPreferences.getInt("warnings_displayed", 00);
+        int warningsShown = sharedPreferences.getInt("warnings_displayed", 0);
         int timeFlag = -1;
 
-        if (remMin <= 20 && warnings[3] && (warningsShown & 6) == 0){
-            sharedPreferences.edit().putInt("warnings_displayed", 2)
+        if (remMin <= 20 && warnings[3] && warningsShown == 0){
+            sharedPreferences.edit().putInt("warnings_displayed", 1)
                     .apply();
             timeFlag = 20;
         }
 
-        if (remMin <= 15 && warnings[2] && (warningsShown & 6) == 2){
-            sharedPreferences.edit().putInt("warnings_displayed", 4)
+        if (remMin <= 15 && warnings[2] && warningsShown == 1){
+            sharedPreferences.edit().putInt("warnings_displayed", 2)
                     .apply();
             timeFlag = 15;
         }
 
-        if (remMin <= 10 && warnings[1] && (warningsShown & 6) == 4){
-            sharedPreferences.edit().putInt("warnings_displayed", 6)
+        if (remMin <= 10 && warnings[1] && warningsShown == 2){
+            sharedPreferences.edit().putInt("warnings_displayed", 3)
                     .apply();
             timeFlag = 10;
         }
 
         //if 00
-        if (remMin <= 5 && warnings[0] && (warningsShown & 6) == 6 && warningsShown != 14){
-            sharedPreferences.edit().putInt("warnings_displayed", 14)
+        if (remMin <= 5 && warnings[0] && warningsShown == 3){
+            sharedPreferences.edit().putInt("warnings_displayed", -1)
                     .apply();
             timeFlag = 5;
         }
