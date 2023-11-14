@@ -1,13 +1,12 @@
 package com.cs407.badgerparking;
 
 import android.Manifest;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -31,6 +30,7 @@ public class NotificationHelper {
     * and make a new channel ID
     * */
 
+    @SuppressLint("ObsoleteSdkInt")
     public void createRemindNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = "Reminders";

@@ -22,7 +22,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -196,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //why in gods name did i chose to do it this way
     private void timerNotiManager(int remMin){
-
         boolean[] warnings = {
                 sharedPreferences.getBoolean("5min_warning", false),
                 sharedPreferences.getBoolean("10min_warning", false),
@@ -430,9 +428,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //Store current time for timer
                     LocalDateTime now =  LocalDateTime.now();
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-                    Log.d("Now", dtf.format(now));
-                    Log.d("Now", String.valueOf(now.getYear()) + "/" + String.valueOf(now.getMonthValue())+ "/" + String.valueOf(now.getDayOfMonth()));
-                    Log.d("Now", String.valueOf(now.getHour()) + ":" + String.valueOf(now.getMinute()));
 
                     sharedPreferences.edit().putInt("year", now.getYear())
                             .putInt("month", now.getMonthValue() - 1)

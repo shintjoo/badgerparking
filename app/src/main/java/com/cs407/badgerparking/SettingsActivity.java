@@ -82,8 +82,6 @@ public class SettingsActivity extends AppCompatActivity {
         b4.setOnClickListener(notiOnClick);
     }
 
-
-
     /*
      * ==================================================
      * <------------------- MENU BAR ------------------->
