@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">badgerparking</string>
-    <string name="rss_url">https://media.cityofmadison.com/Mediasite/FileServer/Podcast/ce9107f7b34a47fa82393d9881c83d8817/feed.xml</string>
+    <string name="rss_url_local">https://madison.com/search/?f=rss&amp;t=article&amp;c=news/local&amp;q=%23wsj&amp;l=25&amp;s=start_time&amp;sd=desc</string>
+    <string name="rss_url_engineering">https://media.cityofmadison.com/Mediasite/FileServer/Podcast/2423db35926149fb8d161ed7f44256c117/feed.xml</string>
+    <string name="rss_url_transport">https://media.cityofmadison.com/Mediasite/FileServer/Podcast/ce9107f7b34a47fa82393d9881c83d8817/feed.xml</string>
     <string name="remind_noti_channel_id">channel_reminders</string>
 </resources>

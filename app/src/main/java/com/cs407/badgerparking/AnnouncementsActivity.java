@@ -50,7 +50,7 @@ public class AnnouncementsActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                rssParser = new RssParser(getResources().getString(R.string.rss_url));
+                rssParser = new RssParser(getResources().getString(R.string.rss_url_engineering));
                 RssParser.Item item;
                 for (int i = 0; i < rssParser.getBounds(); i++){
                     item = rssParser.getItem(i);

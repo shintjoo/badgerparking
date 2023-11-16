@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
                 if (remHour == 0 && remMin >= 1){
-                    timerNotiManager((int)remMin);
+                    timerNotiManager(Math.toIntExact(remMin));
                 }
                 if (remMin <= 1){
                     sharedPreferences.edit().putInt("warnings_displayed", 0)
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void run() {
             try {
 
-                RssParser rssParser = new RssParser(getResources().getString(R.string.rss_url));
+                RssParser rssParser = new RssParser(getResources().getString(R.string.rss_url_engineering));
                 annText =
                         String.format("%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
                                 rssParser.getItem(0).getPubDate());
