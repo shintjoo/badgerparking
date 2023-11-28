@@ -2,6 +2,8 @@
 Most Recent on top
 
 Project Log:
+--11/27/2023 - Created the layout and the initial logic for SearchActivity. Currently our database only has coordinates. Need to figure how to take street names and turn it into coordinates.
+
 --11/16/2023 - Changed timer to use countDownTimer instead of previous jury rigged method (Daniel)
 
 --11/13/2023 - fixed issues with timer updating, now occurs every 15 seconds. Timer will now turn red when the time limit has been execeded (Daniel)
