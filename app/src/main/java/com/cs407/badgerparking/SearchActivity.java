@@ -71,7 +71,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 if (placeName != null) {
                     // Add the selected place's name to the list
-                    locationsList.add(placeName);
+                    locationsList.add(0,placeName);
                     // Notify the adapter that the data has changed
                     locationAdapter.notifyDataSetChanged();
                 }

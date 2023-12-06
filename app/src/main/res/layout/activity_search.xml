@@ -21,26 +21,14 @@
     <fragment
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
-
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="Search"
-        app:layout_constraintEnd_toEndOf="@id/autocomplete_fragment"
-        app:layout_constraintStart_toStartOf="@id/autocomplete_fragment"
-        app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
 
     <ListView
         android:id="@+id/StreetsList"
@@ -50,7 +38,7 @@
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
-        app:layout_constraintTop_toBottomOf="@+id/search_button"
+        app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
