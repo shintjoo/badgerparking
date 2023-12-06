@@ -18,19 +18,19 @@
         app:menu="@menu/bottom_nav_menu">
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-    <EditText
-        android:id="@+id/search_edit_text"
-        android:layout_width="0dp"
+    <fragment
+        android:id="@+id/autocomplete_fragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Enter address to find nearby streets"
+        android:textSize="18sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:textSize="18sp"
-        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <Button
         android:id="@+id/search_button"
@@ -38,9 +38,9 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:text="Search"
-        app:layout_constraintEnd_toEndOf="@id/search_edit_text"
-        app:layout_constraintStart_toStartOf="@id/search_edit_text"
-        app:layout_constraintTop_toBottomOf="@id/search_edit_text" />
+        app:layout_constraintEnd_toEndOf="@id/autocomplete_fragment"
+        app:layout_constraintStart_toStartOf="@id/autocomplete_fragment"
+        app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
 
     <ListView
         android:id="@+id/StreetsList"
