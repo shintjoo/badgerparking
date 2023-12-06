@@ -3,9 +3,11 @@ Most Recent on top
 
 Project Log:
 
+--12/05/2023 - Search activity needed to use geocoder in order to take user input and convert it into coordinates
+
 --12/05/2023 - Added int column with minutes per time_limit column for timer. (Brian)
 
---11/27/2023 - Created the layout and the initial logic for SearchActivity. Currently our database only has coordinates. Need to figure how to take street names and turn it into coordinates.
+--11/27/2023 - Created the layout and the initial logic for SearchActivity. Currently our database only has coordinates. Need to figure how to take street names and turn it into coordinates. (Shawn)
 
 --11/16/2023 - Changed timer to use countDownTimer instead of previous jury rigged method (Daniel)
 
