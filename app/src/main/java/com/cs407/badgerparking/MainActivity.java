@@ -47,6 +47,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private DatabaseHelper dbHelper;
     private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,8 +172,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         int countdown = countHours * 3600000  + countMinutes * 60000;
 
-        CountDownTimer timeBeforeMove = new CountDownTimer (countdown,60000){
+        timeBeforeMove = new CountDownTimer (countdown,60000){
             public void onTick(long remain){
+
+                Log.d("Tick", String.valueOf((remain)));
 
                 long totRemSec = remain/1000;
 
