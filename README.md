@@ -2,8 +2,11 @@
 Most Recent on top
 
 Project Log:
+--12/06/2023 - Fixed issue where multiple timers could run at once and would fight for control of the timer display (Daniel)
 
---12/05/2023 - Search activity needed to use geocoder in order to take user input and convert it into coordinates
+--12/05/2023 - Needed to introduce Places SDK. this will allow for autocomplete of addresses and the ability to turn that into coordinates (Shawn)
+
+--12/05/2023 - Search activity needed to use geocoder in order to take user input and convert it into coordinates (Shawn)
 
 --12/05/2023 - Added int column with minutes per time_limit column for timer. (Brian)
 
