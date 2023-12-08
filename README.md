@@ -2,6 +2,9 @@
 Most Recent on top
 
 Project Log:
+
+--12/07/2023 - Modified the tolerances in the search for restrictions function. Still not working perfectly because sometimes it will display the information on the wrong side of the street (Shawn)
+
 --12/06/2023 - Fixed issue where multiple timers could run at once and would fight for control of the timer display (Daniel)
 
 --12/05/2023 - Needed to introduce Places SDK. this will allow for autocomplete of addresses and the ability to turn that into coordinates (Shawn)
