@@ -99,6 +99,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Leave this empty if you're not using it.
     }
 
+    @SuppressLint("Range")
     public String getParkingRestriction(double lat, double lng) {
         String restriction = "No Data Available";
 
@@ -107,11 +108,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
 
         // Round off the coordinates to 4 decimal places
-        double roundedLat = Math.round(lat * 10000.0) / 10000.0;
-        double roundedLng = Math.round(lng * 10000.0) / 10000.0;
+        double roundedLat = Math.round(lat * 1000000.0) / 1000000.0;
+        double roundedLng = Math.round(lng * 1000000.0) / 1000000.0;
 
         // Tolerance for the search
-        double tolerance = 0.001;
+        double tolerance = 0.0005;
 
         // Log the rounded values
         Log.d("DatabaseHelper", "Rounded Latitude: " + roundedLat);
