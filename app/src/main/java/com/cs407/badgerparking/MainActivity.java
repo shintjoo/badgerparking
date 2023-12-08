@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mCalendar.set(Calendar.DAY_OF_MONTH, sharedPreferences.getInt("day", 0));
         mCalendar.set(Calendar.HOUR_OF_DAY, sharedPreferences.getInt("hour", 0));
         mCalendar.set(Calendar.MINUTE, sharedPreferences.getInt("minute", 0));
+        int limitMin = sharedPreferences.getInt("limit", 0);
 
         Log.d("Logged", sharedPreferences.getInt("year", 0) + "/" + sharedPreferences.getInt("month", 0) + "/" + sharedPreferences.getInt("day", 0)+ " " + sharedPreferences.getInt("hour", 0) + ":" + sharedPreferences.getInt("minute", 0));
 
@@ -167,8 +168,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         int hours = difference/3600;
 
-        int countHours = 47 - hours;
-        int countMinutes = 60 - ((difference/60) - hours*60);
+        int parkMin = limitMin%60;
+        int parkHours = limitMin/60;
+
+        int countHours = parkHours - hours;
+        int countMinutes = parkMin - ((difference/60) - hours*60);
 
         int countdown = countHours * 3600000  + countMinutes * 60000;
 
@@ -438,13 +442,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     //Store current time for timer
                     LocalDateTime now =  LocalDateTime.now();
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-
+                    int limit = dbHelper.getParkingTime(parkedLocation.getLatitude(), parkedLocation.getLongitude());
                     sharedPreferences.edit().putInt("year", now.getYear())
                             .putInt("month", now.getMonthValue() - 1)
                             .putInt("day", now.getDayOfMonth())
                             .putInt("hour", now.getHour())
-                            .putInt("minute", now.getMinute()).apply();
+                            .putInt("minute", now.getMinute())
+                            .putInt("limit", limit)
+                            .apply();
                     updateTime();
 
                     // Here, you can use the obtained restriction string.

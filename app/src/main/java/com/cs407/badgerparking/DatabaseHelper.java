@@ -139,5 +139,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return restriction;
     }
 
+    @SuppressLint("Range")
+    public int getParkingTime(double lat, double lng){
+        int limit = 0;
 
+        // Using hardcoded absolute path for the database
+        String DB_PATH = "/data/data/com.cs407.badgerparking/databases/parkingData.db";
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
+
+        // Round off the coordinates to 4 decimal places
+        double roundedLat = Math.round(lat * 1000000.0) / 1000000.0;
+        double roundedLng = Math.round(lng * 1000000.0) / 1000000.0;
+
+        // Tolerance for the search
+        double tolerance = 0.0005;
+
+        String query = "SELECT time_limit_minutes FROM parking_restrictions WHERE latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{
+                String.valueOf(roundedLat - tolerance),
+                String.valueOf(roundedLat + tolerance),
+                String.valueOf(roundedLng - tolerance),
+                String.valueOf(roundedLng + tolerance)});
+
+        if (cursor.moveToFirst()) {
+            limit = cursor.getInt(cursor.getColumnIndex("time_limit_minutes"));
+            Log.d("DatabaseHelper", "Found parking time: " + limit);  // Log the retrieved restriction
+        } else {
+            Log.d("DatabaseHelper", "No parking time found for the given lat/lng.");
+        }
+
+        cursor.close();
+        db.close();
+
+        return limit;
+    }
 }
