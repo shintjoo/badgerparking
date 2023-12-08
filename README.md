@@ -3,6 +3,8 @@ Most Recent on top
 
 Project Log:
 
+--12/8/2023 - Upgraded timer to adjust its start time to match the parking restrictions of the location parked at (Daniel)
+
 --12/07/2023 - Modified the tolerances in the search for restrictions function. Still not working perfectly because sometimes it will display the information on the wrong side of the street (Shawn)
 
 --12/06/2023 - Fixed issue where multiple timers could run at once and would fight for control of the timer display (Daniel)
