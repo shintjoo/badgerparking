@@ -3,6 +3,7 @@ package com.cs407.badgerparking;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -29,19 +30,29 @@ import java.util.List;
 import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity {
-    private EditText searchEditText;
-    private Button searchButton;
-    private ListView streetsList;
+
+    private DatabaseHelper dbHelper;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+
+        sharedPreferences = getSharedPreferences("com.cs407.badgerparking", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("warnings_displayed", 0)
+                .apply();
+
+        dbHelper = new DatabaseHelper(this); // Instantiating restriction database
+        try {
+            dbHelper.copyDatabase();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         instantiateMenuBar(this);
 
-
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 
         ListView locationListView;
         ArrayAdapter<String> locationAdapter;
@@ -64,22 +75,22 @@ public class SearchActivity extends AppCompatActivity {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                // Get the selected place's name, ID, and LatLng
+                // Get the selected place's name and LatLng
                 String placeName = place.getName();
-                String placeId = place.getId();
                 LatLng latLng = place.getLatLng();
-
-                if (placeName != null) {
-                    // Add the selected place's name to the list
-                    locationsList.add(0,placeName);
-                    // Notify the adapter that the data has changed
-                    locationAdapter.notifyDataSetChanged();
+                double latitude = 0;
+                double longitude = 0;
+                if (latLng != null) {
+                    latitude = latLng.latitude;
+                    longitude = latLng.longitude;
                 }
 
-                if (latLng != null) {
-                    double latitude = latLng.latitude;
-                    double longitude = latLng.longitude;
-
+                if (placeName != null) {
+                    String restriction = dbHelper.getParkingRestriction(latitude, longitude);
+                    // Add the selected place's name to the list
+                    locationsList.add(0,placeName+":\n" + restriction);
+                    // Notify the adapter that the data has changed
+                    locationAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -88,41 +99,6 @@ public class SearchActivity extends AppCompatActivity {
                 // Handle error
             }
         });
-
-        /**
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String streetName = searchEditText.getText().toString().trim();
-                // Convert address to coordinates
-                List<Address> addresses = null;
-                try {
-                    addresses = geocoder.getFromLocationName(streetName, 1);
-                    if (addresses != null && addresses.size() > 0) {
-                        double latitude = addresses.get(0).getLatitude();
-                        double longitude = addresses.get(0).getLongitude();
-
-                        // Use latitude and longitude
-                        // Query the database using obtained coordinates to get nearby streets and restrictions
-
-                    } else {
-                        // Handle address not found
-
-
-
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-
-                // Update UI with nearby streets and restriction types
-                //nearbyStreetsTextView.setText("Nearby Streets:\n" + nearbyStreets);
-                //restrictionTypesTextView.setText("Restriction Types:\n" + restrictionTypes);
-            }
-        });
-         **/
     }
 
     /*
