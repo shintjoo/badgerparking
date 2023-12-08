@@ -1,7 +1,9 @@
 package com.cs407.badgerparking;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -38,11 +40,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import android.app.AlarmManager;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private DatabaseHelper dbHelper;
@@ -143,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPreferences.edit().putInt("hour", hour).putInt("minute", minute).apply();
     }
 
+    static boolean alarmSet;
+    long secondsLeft;
     public void updateTime(){
         if(timeBeforeMove != null) {
             timeBeforeMove.cancel();
@@ -183,9 +187,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 long totRemSec = remain/1000;
 
+                secondsLeft = totRemSec;
+
                 long remHour = totRemSec/3600;
 
                 long remMin = (totRemSec/60) - remHour*60;
+
+                if(!alarmSet){
+                    setAlarms(totRemSec);
+                    alarmSet = true;
+                }
 
                 String display;
                 if(remMin > 9) {
@@ -193,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }else{
                     display = remHour + ":0" + remMin;
                 }
+
 
                 if (remHour == 0 && remMin >= 1){
                     timerNotiManager(Math.toIntExact(remMin));
@@ -206,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 clock.setTextColor(Color.WHITE);
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onFinish() {
                 clock.setText("00:00");
@@ -214,6 +227,84 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }.start();
 
 
+    }
+
+
+    private void setAlarms(long remSec){
+        Log.d("Alarm", "setAlarms called");
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        if(sharedPreferences.getBoolean("5min_warning", false)&&
+                !sharedPreferences.getBoolean("5min_set?", true) && remSec > 5*60) {
+            set5Min(alarmManager);
+        } else if(!sharedPreferences.getBoolean("5min_warning", true)&&
+                sharedPreferences.getBoolean("5min_set?", false)){
+            cancel5Min(alarmManager);
+        }
+
+        if(sharedPreferences.getBoolean("10min_warning", false) &&
+                !sharedPreferences.getBoolean("10min_set?", true) &&remSec > 10*60){
+            set10Min(alarmManager);
+        }
+
+        if(sharedPreferences.getBoolean("15min_warning", false) &&
+                !sharedPreferences.getBoolean("15min_set?", true) && remSec > 15*60){
+            set15Min(alarmManager);
+                   }
+        if(sharedPreferences.getBoolean("20min_warning", false) &&
+                !sharedPreferences.getBoolean("20min_set?", true) && remSec > 20*60){
+            set20Min(alarmManager);
+        }
+
+    }
+
+    private void set5Min(AlarmManager alarmManager){
+        Log.d("Alarm", "5 min alarm set");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("time", 5);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                5, intent, PendingIntent.FLAG_IMMUTABLE);
+        long setter = secondsLeft - (5*60);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000, pendingIntent);
+        sharedPreferences.edit().putBoolean("5min_set?", true).apply();
+    }
+    private void cancel5Min(AlarmManager alarmManager){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                5 , intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pendingIntent);
+        sharedPreferences.edit().putBoolean("5min_set?", false).apply();
+    }
+
+    private void set10Min(AlarmManager alarmManager){
+        Log.d("Alarm", "10 min alarm set");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("time", 10);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                10, intent, PendingIntent.FLAG_IMMUTABLE);
+        long setter = secondsLeft -10*60;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000L, pendingIntent);
+    }
+
+    private void set15Min(AlarmManager alarmManager){
+        Log.d("Alarm", "15 min alarm set");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("time", 15);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                15, intent, PendingIntent.FLAG_IMMUTABLE);
+        long setter = secondsLeft -15*60;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000L, pendingIntent);
+
+    }
+
+    private void set20Min(AlarmManager alarmManager){
+        Log.d("Alarm", "20 min alarm set");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("time", 20);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                20, intent, PendingIntent.FLAG_IMMUTABLE);
+        long setter = secondsLeft -20*60;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000L, pendingIntent);
     }
 
     //why in gods name did i chose to do it this way
