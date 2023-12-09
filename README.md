@@ -2,6 +2,7 @@
 Most Recent on top
 
 Project Log:
+--12/8/2023 - Finished creating alarms to trigger notifications, but have not tested all cases yet (Daniel)
 
 --12/8/2023 - Part way through creating alarms to trigger notifications when the app is not running (Daniel)
 
