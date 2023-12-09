@@ -1,7 +1,9 @@
 package com.cs407.badgerparking;
 
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -44,11 +46,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import android.app.AlarmManager;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private DatabaseHelper dbHelper;
-    private SharedPreferences sharedPreferences;
+    static SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +88,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             com.cs407.badgerparking.TimePicker timePickerDialog = new com.cs407.badgerparking.TimePicker();
             timePickerDialog.show(getSupportFragmentManager(), "TIME PICK");
         });
+        alarmManager = (android.app.AlarmManager) getSystemService(Context.ALARM_SERVICE);
         updateTime();
-
-
+        setAlarms();
         setupParkButton();
+    }
+
+    protected void onStop() {
+        setAlarms();
+        super.onStop();
     }
 
     /*
@@ -137,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         sharedPreferences.edit().putInt("year", year).putInt("month", month).putInt("day", dayOfMonth).apply();
+        killAlarms();
         updateTime();
     }
 
@@ -145,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPreferences.edit().putInt("hour", hour).putInt("minute", minute).apply();
     }
 
-    static boolean alarmSet;
-    long secondsLeft;
+    static long secondsLeft;
+    AlarmManager alarmManager;
     public void updateTime(){
         if(timeBeforeMove != null) {
             timeBeforeMove.cancel();
@@ -193,11 +200,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 long remMin = (totRemSec/60) - remHour*60;
 
-                if(!alarmSet){
-                    setAlarms(totRemSec);
-                    alarmSet = true;
-                }
-
                 String display;
                 if(remMin > 9) {
                     display = remHour + ":" + remMin;
@@ -229,82 +231,107 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
-    private void setAlarms(long remSec){
+    public void setAlarms(){
         Log.d("Alarm", "setAlarms called");
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        if(sharedPreferences.getBoolean("5min_warning", false)&&
-                !sharedPreferences.getBoolean("5min_set?", true) && remSec > 5*60) {
-            set5Min(alarmManager);
-        } else if(!sharedPreferences.getBoolean("5min_warning", true)&&
-                sharedPreferences.getBoolean("5min_set?", false)){
-            cancel5Min(alarmManager);
+        if(sharedPreferences.getBoolean("5min_warning", false)&& secondsLeft > 5*60) {
+            set5Min();
+        } else{
+            cancel5Min();
         }
 
-        if(sharedPreferences.getBoolean("10min_warning", false) &&
-                !sharedPreferences.getBoolean("10min_set?", true) &&remSec > 10*60){
-            set10Min(alarmManager);
+        if(sharedPreferences.getBoolean("10min_warning", false) && secondsLeft > 10*60){
+            set10Min();
+        } else {
+            cancel10Min();
         }
 
-        if(sharedPreferences.getBoolean("15min_warning", false) &&
-                !sharedPreferences.getBoolean("15min_set?", true) && remSec > 15*60){
-            set15Min(alarmManager);
-                   }
-        if(sharedPreferences.getBoolean("20min_warning", false) &&
-                !sharedPreferences.getBoolean("20min_set?", true) && remSec > 20*60){
-            set20Min(alarmManager);
+        if(sharedPreferences.getBoolean("15min_warning", false) && secondsLeft > 15*60){
+            set15Min();
+        }else{
+            cancel15Min();
+        }
+        if(sharedPreferences.getBoolean("20min_warning", false) && secondsLeft > 20*60){
+            set20Min();
+        }else{
+            cancel20Min();
         }
 
     }
 
-    private void set5Min(AlarmManager alarmManager){
+    private void killAlarms(){
+        cancel5Min();
+        cancel10Min();
+        cancel15Min();
+        cancel20Min();
+    }
+
+    private void set5Min(){
         Log.d("Alarm", "5 min alarm set");
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("time", 5);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 5, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft - (5*60);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000, pendingIntent);
-        sharedPreferences.edit().putBoolean("5min_set?", true).apply();
+
+        alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis()
+                        + setter *1000,  //Change this line to adjust for testing, 10000 = 10 secs
+                        pendingIntent);
+
     }
-    private void cancel5Min(AlarmManager alarmManager){
+    private void cancel5Min(){
+        Log.d("Alarm", "Cancelled 5 min alarm");
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 5 , intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
-        sharedPreferences.edit().putBoolean("5min_set?", false).apply();
     }
-
-    private void set10Min(AlarmManager alarmManager){
-        Log.d("Alarm", "10 min alarm set");
+    private void set10Min(){
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("time", 10);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 10, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft -10*60;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000L, pendingIntent);
+        alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + setter *1000, pendingIntent);
     }
+    private void cancel10Min(){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                10 , intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pendingIntent);
 
-    private void set15Min(AlarmManager alarmManager){
-        Log.d("Alarm", "15 min alarm set");
+    }
+    private void set15Min(){
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("time", 15);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 15, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft -15*60;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000L, pendingIntent);
-
+        alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + setter *1000, pendingIntent);
     }
-
-    private void set20Min(AlarmManager alarmManager){
-        Log.d("Alarm", "20 min alarm set");
+    private void cancel15Min(){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                15, intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pendingIntent);
+    }
+    private void set20Min(){
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("time", 20);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 20, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft -20*60;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setter * 60000L, pendingIntent);
+        alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + setter *1000, pendingIntent);
+    }
+    private void cancel20Min(){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                20, intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pendingIntent);
     }
 
     //why in gods name did i chose to do it this way
@@ -541,6 +568,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .putInt("minute", now.getMinute())
                             .putInt("limit", limit)
                             .apply();
+                    killAlarms();
                     updateTime();
 
                     // Here, you can use the obtained restriction string.
