@@ -43,15 +43,15 @@ public class SettingsActivity extends AppCompatActivity {
             b1.setChecked(true);
         }
 
-        if (sharedPreferences.getBoolean("10min_warning", false)){
+        if (sharedPreferences.getBoolean("15min_warning", false)){
             b2.setChecked(true);
         }
 
-        if (sharedPreferences.getBoolean("15min_warning", false)){
+        if (sharedPreferences.getBoolean("30min_warning", false)){
             b3.setChecked(true);
         }
 
-        if (sharedPreferences.getBoolean("20min_warning", false)){
+        if (sharedPreferences.getBoolean("60min_warning", false)){
             b4.setChecked(true);
         }
 
@@ -69,9 +69,9 @@ public class SettingsActivity extends AppCompatActivity {
                 NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
 
                 sharedPreferences.edit().putBoolean("5min_warning", b1.isChecked())
-                                        .putBoolean("10min_warning", b2.isChecked())
-                                        .putBoolean("15min_warning", b3.isChecked())
-                                        .putBoolean("20min_warning", b4.isChecked())
+                                        .putBoolean("15min_warning", b2.isChecked())
+                                        .putBoolean("30min_warning", b3.isChecked())
+                                        .putBoolean("60min_warning", b4.isChecked())
                                         .apply();
             }
         };

@@ -42,10 +42,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private DatabaseHelper dbHelper;
@@ -127,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setupNotifications(){
         NotificationHelper.getInstance().createRemindNotificationChannel(getApplicationContext());
     }
-
 
     /*
      * =======================================================
@@ -240,31 +241,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             cancel5Min();
         }
 
-        if(sharedPreferences.getBoolean("10min_warning", false) && secondsLeft > 10*60){
-            set10Min();
-        } else {
-            cancel10Min();
-        }
-
-        if(sharedPreferences.getBoolean("15min_warning", false) && secondsLeft > 15*60){
+        if(sharedPreferences.getBoolean("15min_warning", false) && secondsLeft > 10*60){
             set15Min();
-        }else{
+        } else {
             cancel15Min();
         }
-        if(sharedPreferences.getBoolean("20min_warning", false) && secondsLeft > 20*60){
-            set20Min();
+
+        if(sharedPreferences.getBoolean("30min_warning", false) && secondsLeft > 15*60){
+            set30Min();
         }else{
-            cancel20Min();
+            cancel30Min();
+        }
+        if(sharedPreferences.getBoolean("60min_warning", false) && secondsLeft > 20*60){
+            set60Min();
+        }else{
+            cancel60Min();
         }
 
     }
 
     private void killAlarms(){
         cancel5Min();
-        cancel10Min();
         cancel15Min();
-        cancel20Min();
+        cancel30Min();
+        cancel60Min();
     }
+
+
 
     private void set5Min(){
         Log.d("Alarm", "5 min alarm set");
@@ -287,22 +290,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 5 , intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
     }
-    private void set10Min(){
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.putExtra("time", 10);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
-                10, intent, PendingIntent.FLAG_IMMUTABLE);
-        long setter = secondsLeft -10*60;
-        alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + setter *1000, pendingIntent);
-    }
-    private void cancel10Min(){
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                10 , intent, PendingIntent.FLAG_IMMUTABLE);
-        alarmManager.cancel(pendingIntent);
-
-    }
     private void set15Min(){
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("time", 15);
@@ -315,22 +302,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void cancel15Min(){
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                15, intent, PendingIntent.FLAG_IMMUTABLE);
+                15 , intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
+
     }
-    private void set20Min(){
+    private void set30Min(){
         Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.putExtra("time", 20);
+        intent.putExtra("time", 30);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
-                20, intent, PendingIntent.FLAG_IMMUTABLE);
-        long setter = secondsLeft -20*60;
+                30, intent, PendingIntent.FLAG_IMMUTABLE);
+        long setter = secondsLeft -30*60;
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + setter *1000, pendingIntent);
     }
-    private void cancel20Min(){
+    private void cancel30Min(){
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                20, intent, PendingIntent.FLAG_IMMUTABLE);
+                30, intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pendingIntent);
+    }
+    private void set60Min(){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("time", 60);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                60, intent, PendingIntent.FLAG_IMMUTABLE);
+        long setter = secondsLeft -60*60;
+        alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + setter *1000, pendingIntent);
+    }
+    private void cancel60Min(){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                60, intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
     }
 
