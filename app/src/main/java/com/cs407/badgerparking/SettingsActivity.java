@@ -30,7 +30,10 @@ public class SettingsActivity extends AppCompatActivity {
         setupNotiBar();
     }
 
-
+    private void setupNotifications(){
+        NotificationHelper.getInstance().createRemindNotificationChannel(getApplicationContext());
+    }
+    
     public void setupNotiBar(){
         b1 = findViewById(R.id.toggle1);
         b2 = findViewById(R.id.toggle2);
@@ -54,9 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean("60min_warning", false)){
             b4.setChecked(true);
         }
-
         notiBarClickManager();
-
     }
 
     public void notiBarClickManager(){
@@ -64,9 +65,9 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                NotificationHelper.getInstance().setNotificationContent(getString(R.string.remind_noti_channel_id), "" + b1.isChecked() + " "
-                        + b2.isChecked() + " " + b3.isChecked() + " " + b4.isChecked());
-                NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
+//                NotificationHelper.getInstance().setNotificationContent(getString(R.string.remind_noti_channel_id), "" + b1.isChecked() + " "
+//                        + b2.isChecked() + " " + b3.isChecked() + " " + b4.isChecked());
+//                NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
 
                 sharedPreferences.edit().putBoolean("5min_warning", b1.isChecked())
                                         .putBoolean("15min_warning", b2.isChecked())

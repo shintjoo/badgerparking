@@ -14,8 +14,8 @@ import androidx.core.app.NotificationManagerCompat;
 public class NotificationHelper {
 
     public static final NotificationHelper INSTANCE = new NotificationHelper();
-
     private NotificationHelper(){}
+    private boolean doesChannelExist = false;
 
     public static NotificationHelper getInstance(){
         return INSTANCE;
@@ -32,16 +32,19 @@ public class NotificationHelper {
 
     @SuppressLint("ObsoleteSdkInt")
     public void createRemindNotificationChannel(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "Reminders";
-            String description = "All Time Reminders";
+        if (!doesChannelExist) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = "Reminders";
+                String description = "All Time Reminders";
 
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel remindChannel = new NotificationChannel(context.getString(R.string.remind_noti_channel_id), name, importance);
-            remindChannel.setDescription(description);
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel remindChannel = new NotificationChannel(context.getString(R.string.remind_noti_channel_id), name, importance);
+                remindChannel.setDescription(description);
 
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(remindChannel);
+                NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(remindChannel);
+            }
+            doesChannelExist = true;
         }
     }
 

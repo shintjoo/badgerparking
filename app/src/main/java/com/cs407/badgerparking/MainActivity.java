@@ -209,13 +209,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
 
-                if (remHour == 0 && remMin >= 1){
-                    timerNotiManager(Math.toIntExact(remMin));
-                }
-                if (remMin <= 1){
-                    sharedPreferences.edit().putInt("warnings_displayed", 0)
-                            .apply();
-                }
+//                if (remHour == 0 && remMin >= 1){
+//                    timerNotiManager(Math.toIntExact(remMin));
+//                }
+//                if (remMin <= 1){
+//                    sharedPreferences.edit().putInt("warnings_displayed", 0)
+//                            .apply();
+//                }
 
                 clock.setText(display);
                 clock.setTextColor(Color.WHITE);
@@ -337,55 +337,54 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         alarmManager.cancel(pendingIntent);
     }
 
-    //why in gods name did i chose to do it this way
-    private void timerNotiManager(int remMin){
-        boolean[] warnings = {
-                sharedPreferences.getBoolean("5min_warning", false),
-                sharedPreferences.getBoolean("10min_warning", false),
-                sharedPreferences.getBoolean("15min_warning", false),
-                sharedPreferences.getBoolean("20min_warning", false)
-        };
-
-        /* 0    2    4    6
-        *  00   01   10   11
-         */
-
-        int warningsShown = sharedPreferences.getInt("warnings_displayed", 0);
-        int timeFlag = -1;
-
-        if (remMin <= 20 && warnings[3] && warningsShown == 0){
-            sharedPreferences.edit().putInt("warnings_displayed", 1)
-                    .apply();
-            timeFlag = 20;
-        }
-
-        if (remMin <= 15 && warnings[2] && warningsShown == 1){
-            sharedPreferences.edit().putInt("warnings_displayed", 2)
-                    .apply();
-            timeFlag = 15;
-        }
-
-        if (remMin <= 10 && warnings[1] && warningsShown == 2){
-            sharedPreferences.edit().putInt("warnings_displayed", 3)
-                    .apply();
-            timeFlag = 10;
-        }
-
-        //if 00
-        if (remMin <= 5 && warnings[0] && warningsShown == 3){
-            sharedPreferences.edit().putInt("warnings_displayed", -1)
-                    .apply();
-            timeFlag = 5;
-        }
-
-        if (timeFlag != -1){
-            NotificationHelper.getInstance().setNotificationContent(getString(R.string.remind_noti_channel_id),
-                    timeFlag + " minutes left!");
-
-            NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
-            timeFlag = -1;
-        }
-    }
+//    private void timerNotiManager(int remMin){
+//        boolean[] warnings = {
+//                sharedPreferences.getBoolean("5min_warning", false),
+//                sharedPreferences.getBoolean("15min_warning", false),
+//                sharedPreferences.getBoolean("30min_warning", false),
+//                sharedPreferences.getBoolean("60min_warning", false)
+//        };
+//
+//        /* 0    2    4    6
+//        *  00   01   10   11
+//         */
+//
+//        int warningsShown = sharedPreferences.getInt("warnings_displayed", 0);
+//        int timeFlag = -1;
+//
+//        if (remMin <= 60 && warnings[3] && warningsShown == 0){
+//            sharedPreferences.edit().putInt("warnings_displayed", 1)
+//                    .apply();
+//            timeFlag = 60;
+//        }
+//
+//        if (remMin <= 30 && warnings[2] && warningsShown == 1){
+//            sharedPreferences.edit().putInt("warnings_displayed", 2)
+//                    .apply();
+//            timeFlag = 30;
+//        }
+//
+//        if (remMin <= 15 && warnings[1] && warningsShown == 2){
+//            sharedPreferences.edit().putInt("warnings_displayed", 3)
+//                    .apply();
+//            timeFlag = 15;
+//        }
+//
+//        //if 00
+//        if (remMin <= 5 && warnings[0] && warningsShown == 3){
+//            sharedPreferences.edit().putInt("warnings_displayed", -1)
+//                    .apply();
+//            timeFlag = 5;
+//        }
+//
+//        if (timeFlag != -1){
+//            NotificationHelper.getInstance().setNotificationContent(getString(R.string.remind_noti_channel_id),
+//                    timeFlag + " minutes left!");
+//
+//            NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
+//            timeFlag = -1;
+//        }
+//    }
 
     /*
      * =======================================================
