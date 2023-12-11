@@ -238,21 +238,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(sharedPreferences.getBoolean("5min_warning", false)&& secondsLeft > 5*60) {
             set5Min();
         } else{
+            Log.d("Alarm", "cancel 5 min called, sharedPref is " + sharedPreferences.getBoolean("5min_warning", false) + " secondsLeft is " + secondsLeft);
             cancel5Min();
         }
 
-        if(sharedPreferences.getBoolean("15min_warning", false) && secondsLeft > 10*60){
+        if(sharedPreferences.getBoolean("15min_warning", false) && secondsLeft > 15*60){
             set15Min();
         } else {
             cancel15Min();
         }
 
-        if(sharedPreferences.getBoolean("30min_warning", false) && secondsLeft > 15*60){
+        if(sharedPreferences.getBoolean("30min_warning", false) && secondsLeft > 30*60){
             set30Min();
         }else{
             cancel30Min();
         }
-        if(sharedPreferences.getBoolean("60min_warning", false) && secondsLeft > 20*60){
+        if(sharedPreferences.getBoolean("60min_warning", false) && secondsLeft > 60*60){
             set60Min();
         }else{
             cancel60Min();
@@ -261,27 +262,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void killAlarms(){
+        Log.d("alarm", "killAlarms called");
         cancel5Min();
         cancel15Min();
         cancel30Min();
         cancel60Min();
     }
 
-
-
     private void set5Min(){
         Log.d("Alarm", "5 min alarm set");
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("time", 5);
+        Log.d("alarm", "set5Min intent is  " + intent.getIntExtra("time", -1));
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 5, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft - (5*60);
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis()
-                        + setter *1000,  //Change this line to adjust for testing, 10000 = 10 secs
+                        + (10000), //Change this line to adjust for testing, 10000 = 10 secs
+//                        + setter *1000,
                         pendingIntent);
-
     }
     private void cancel5Min(){
         Log.d("Alarm", "Cancelled 5 min alarm");
@@ -572,6 +573,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .apply();
                     killAlarms();
                     updateTime();
+                    setAlarms();
 
                     // Here, you can use the obtained restriction string.
                     // For example, display it in a Toast or any other UI element:

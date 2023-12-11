@@ -65,9 +65,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-//                NotificationHelper.getInstance().setNotificationContent(getString(R.string.remind_noti_channel_id), "" + b1.isChecked() + " "
-//                        + b2.isChecked() + " " + b3.isChecked() + " " + b4.isChecked());
-//                NotificationHelper.getInstance().showNotification(getApplicationContext(), getString(R.string.remind_noti_channel_id));
+                Log.d("alarm", "5 " + b1.isChecked() + " 15 " +
+                                                b2.isChecked() + " 30 "  + b3.isChecked() + " 60 " + b4.isChecked());
 
                 sharedPreferences.edit().putBoolean("5min_warning", b1.isChecked())
                                         .putBoolean("15min_warning", b2.isChecked())
@@ -75,6 +74,8 @@ public class SettingsActivity extends AppCompatActivity {
                                         .putBoolean("60min_warning", b4.isChecked())
                                         .apply();
             }
+
+
         };
 
         b1.setOnClickListener(notiOnClick);
