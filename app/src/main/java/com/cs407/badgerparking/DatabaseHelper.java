@@ -15,8 +15,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -174,4 +180,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return limit;
     }
+
+
+    public List<LatLng> getLocationsWithinBounds(LatLngBounds bounds) {
+        List<LatLng> locations = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            db = this.getReadableDatabase();
+
+            // Define a query to select rows within the map bounds
+            String selection = "latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?";
+            String[] selectionArgs = {
+                    String.valueOf(bounds.southwest.latitude),
+                    String.valueOf(bounds.northeast.latitude),
+                    String.valueOf(bounds.southwest.longitude),
+                    String.valueOf(bounds.northeast.longitude)
+            };
+
+            // Execute the query
+            cursor = db.query(
+                    "parking_restrictions", // Table name
+                    new String[]{"latitude", "longitude"}, // Columns to return
+                    selection, // Selection criteria
+                    selectionArgs, // Selection arguments
+                    null, // Group by
+                    null, // Having
+                    null  // Order by
+            );
+
+            // Iterate over the result set and build the list of LatLng objects
+            while (cursor.moveToNext()) {
+                double lat = cursor.getDouble(cursor.getColumnIndex("latitude"));
+                double lng = cursor.getDouble(cursor.getColumnIndex("longitude"));
+                locations.add(new LatLng(lat, lng));
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Error while trying to get locations from database", e);
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+
+        return locations;
+    }
+
+
+    // Inside DatabaseHelper class
+    public List<MyClusterItem> getAllClusterItems() {
+        List<MyClusterItem> items = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT latitude, longitude, restriction_text FROM parking_restrictions", null);
+
+        while (cursor.moveToNext()) {
+            double lat = cursor.getDouble(cursor.getColumnIndex("latitude"));
+            double lng = cursor.getDouble(cursor.getColumnIndex("longitude"));
+            String restrictionText = cursor.getString(cursor.getColumnIndex("restriction_text"));
+            // Handle the potential null value for restriction_text
+            if (restrictionText == null) {
+                restrictionText = "No restriction information available";
+            }
+            items.add(new MyClusterItem(lat, lng, "Restriction:", restrictionText));
+        }
+        cursor.close();
+        return items;
+    }
+
+
+
+
+
+
 }
