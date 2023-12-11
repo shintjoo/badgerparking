@@ -18,4 +18,10 @@
         app:menu="@menu/bottom_nav_menu"
         tools:layout_editor_absoluteY="656dp"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
+    <fragment
+        android:id="@+id/mapActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
