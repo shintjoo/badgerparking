@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis()
-                        //+ (10000), Change this line to adjust for testing, 10000 = 10 secs
+                        //+ (10000), //Change this line to adjust for testing, 10000 = 10 secs
                         + setter *1000,
                         pendingIntent);
     }

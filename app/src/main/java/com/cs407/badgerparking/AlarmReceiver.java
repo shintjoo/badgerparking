@@ -19,27 +19,27 @@ public class AlarmReceiver extends BroadcastReceiver {
         if(intent.getIntExtra("time", 0) == 5){
             //trigger 5 minute notification
             Log.d("Alarm", "5 Minute Alarm!!");
-            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "5 minute alarm!");
+            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "5 minutes until overparked!");
             NotificationHelper.getInstance().showNotification(context, "channel_reminders");
         }
 
         if(intent.getIntExtra("time", 0)== 15){
             Log.d("Alarm", "15 Minute Alarm!!");
-            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "15 minute alarm");
+            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "15 minutes until overparked!");
             NotificationHelper.getInstance().showNotification(context, "channel_reminders");
             //trigger 15 minute notification
         }
 
         if(intent.getIntExtra("time", 0) ==30){
             Log.d("Alarm", "30 Minute Alarm!!");
-            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "30 minute alarm");
+            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "30 minutes until overparked!");
             NotificationHelper.getInstance().showNotification(context, "channel_reminders");
 
         }
 
         if(intent.getIntExtra("time", 0) == 60){
             Log.d("Alarm", "60 Minute Alarm!!");
-            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "one hour alarm");
+            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "60 minutes until overparked!");
             NotificationHelper.getInstance().showNotification(context, "channel_reminders");
 
         }
