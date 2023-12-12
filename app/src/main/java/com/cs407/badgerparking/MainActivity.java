@@ -42,12 +42,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private DatabaseHelper dbHelper;
@@ -210,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     display = remHour + ":0" + remMin;
                 }
 
-
 //                if (remHour == 0 && remMin >= 1){
 //                    timerNotiManager(Math.toIntExact(remMin));
 //                }
@@ -240,10 +237,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(sharedPreferences.getBoolean("5min_warning", false)&& secondsLeft > 5*60) {
             set5Min();
         }
-        else if(sharedPreferences.getBoolean("5_alive", false)){
-           //do nothing
-        }
-        else{
+        else if(!sharedPreferences.getBoolean("5_alive", true)){
             Log.d("Alarm", "cancel 5 min called, sharedPref is " + sharedPreferences.getBoolean("5min_warning", false) + " secondsLeft is " + secondsLeft);
             cancel5Min();
         }
@@ -251,27 +245,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(sharedPreferences.getBoolean("15min_warning", false) && secondsLeft > 15*60){
             set15Min();
         }
-        else if(sharedPreferences.getBoolean("15_alive", false)){
-            //do nothing
-        }else {
+        else if(!sharedPreferences.getBoolean("15_alive", true)){
             cancel15Min();
         }
 
         if(sharedPreferences.getBoolean("30min_warning", false) && secondsLeft > 30*60){
             set30Min();
         }
-        else if(sharedPreferences.getBoolean("30_alive", false)){
-            //do nothing
-        }else{
+        else if(!sharedPreferences.getBoolean("30_alive", true)){
             cancel30Min();
         }
 
         if(sharedPreferences.getBoolean("60min_warning", false) && secondsLeft > 60*60){
             set60Min();
         }
-        else if(sharedPreferences.getBoolean("60_alive", false)){
-            //do nothing
-        }else{
+        else if(!sharedPreferences.getBoolean("60_alive", true)){
             cancel60Min();
         }
 
@@ -298,8 +286,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis()
-                        + (10000), //Change this line to adjust for testing, 10000 = 10 secs
-//                        + setter *1000,
+                        //+ (10000), Change this line to adjust for testing, 10000 = 10 secs
+                        + setter *1000,
                         pendingIntent);
     }
     private void cancel5Min(){
@@ -321,7 +309,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + setter *1000, pendingIntent);
+                System.currentTimeMillis() +
+                 setter *1000, pendingIntent);
     }
     private void cancel15Min(){
         sharedPreferences.edit().putBoolean("15_alive", false).apply();

@@ -1,14 +1,15 @@
 package com.cs407.badgerparking;
 
-import android.app.NotificationManager;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
+
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -23,19 +24,21 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         if(intent.getIntExtra("time", 0)== 15){
+            Log.d("Alarm", "15 Minute Alarm!!");
             NotificationHelper.getInstance().setNotificationContent("BadgerParking", "15 minute alarm");
             NotificationHelper.getInstance().showNotification(context, "channel_reminders");
-
             //trigger 15 minute notification
         }
 
         if(intent.getIntExtra("time", 0) ==30){
+            Log.d("Alarm", "30 Minute Alarm!!");
             NotificationHelper.getInstance().setNotificationContent("BadgerParking", "30 minute alarm");
             NotificationHelper.getInstance().showNotification(context, "channel_reminders");
 
         }
 
         if(intent.getIntExtra("time", 0) == 60){
+            Log.d("Alarm", "60 Minute Alarm!!");
             NotificationHelper.getInstance().setNotificationContent("BadgerParking", "one hour alarm");
             NotificationHelper.getInstance().showNotification(context, "channel_reminders");
 
