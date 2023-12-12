@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             com.cs407.badgerparking.TimePicker timePickerDialog = new com.cs407.badgerparking.TimePicker();
             timePickerDialog.show(getSupportFragmentManager(), "TIME PICK");
         });
+
+
         alarmManager = (android.app.AlarmManager) getSystemService(Context.ALARM_SERVICE);
         updateTime();
         setAlarms();
@@ -237,24 +239,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if(sharedPreferences.getBoolean("5min_warning", false)&& secondsLeft > 5*60) {
             set5Min();
-        } else{
+        }
+        else if(sharedPreferences.getBoolean("5_alive", false)){
+           //do nothing
+        }
+        else{
             Log.d("Alarm", "cancel 5 min called, sharedPref is " + sharedPreferences.getBoolean("5min_warning", false) + " secondsLeft is " + secondsLeft);
             cancel5Min();
         }
 
         if(sharedPreferences.getBoolean("15min_warning", false) && secondsLeft > 15*60){
             set15Min();
-        } else {
+        }
+        else if(sharedPreferences.getBoolean("15_alive", false)){
+            //do nothing
+        }else {
             cancel15Min();
         }
 
         if(sharedPreferences.getBoolean("30min_warning", false) && secondsLeft > 30*60){
             set30Min();
+        }
+        else if(sharedPreferences.getBoolean("30_alive", false)){
+            //do nothing
         }else{
             cancel30Min();
         }
+
         if(sharedPreferences.getBoolean("60min_warning", false) && secondsLeft > 60*60){
             set60Min();
+        }
+        else if(sharedPreferences.getBoolean("60_alive", false)){
+            //do nothing
         }else{
             cancel60Min();
         }
@@ -278,6 +294,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 5, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft - (5*60);
 
+        sharedPreferences.edit().putBoolean("5_alive", true).apply();
+
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis()
                         + (10000), //Change this line to adjust for testing, 10000 = 10 secs
@@ -286,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     private void cancel5Min(){
         Log.d("Alarm", "Cancelled 5 min alarm");
+        sharedPreferences.edit().putBoolean("5_alive", false).apply();
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 5 , intent, PendingIntent.FLAG_IMMUTABLE);
@@ -297,10 +316,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 15, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft -15*60;
+
+        sharedPreferences.edit().putBoolean("15_alive", true).apply();
+
+
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + setter *1000, pendingIntent);
     }
     private void cancel15Min(){
+        sharedPreferences.edit().putBoolean("15_alive", false).apply();
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 15 , intent, PendingIntent.FLAG_IMMUTABLE);
@@ -313,13 +337,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 30, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft -30*60;
+
+        sharedPreferences.edit().putBoolean("30_alive", true).apply();
+
+
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + setter *1000, pendingIntent);
     }
     private void cancel30Min(){
+        sharedPreferences.edit().putBoolean("5_alive", false).apply();
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 30, intent, PendingIntent.FLAG_IMMUTABLE);
+
         alarmManager.cancel(pendingIntent);
     }
     private void set60Min(){
@@ -328,10 +358,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 60, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft -60*60;
+
+        sharedPreferences.edit().putBoolean("60_alive", true).apply();
+
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + setter *1000, pendingIntent);
     }
     private void cancel60Min(){
+        sharedPreferences.edit().putBoolean("5_alive", false).apply();
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 60, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -574,7 +608,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     killAlarms();
                     updateTime();
                     setAlarms();
-
                     // Here, you can use the obtained restriction string.
                     // For example, display it in a Toast or any other UI element:
                     Toast.makeText(getApplicationContext(), restriction, Toast.LENGTH_LONG).show();

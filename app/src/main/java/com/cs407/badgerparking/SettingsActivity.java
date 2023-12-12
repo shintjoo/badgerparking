@@ -40,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity {
         b3 = findViewById(R.id.toggle3);
         b4 = findViewById(R.id.toggle4);
 
-
         //since creating the activity defaults the buttons to false, we only need to make them true
         if (sharedPreferences.getBoolean("5min_warning", false)){
             b1.setChecked(true);
@@ -73,9 +72,24 @@ public class SettingsActivity extends AppCompatActivity {
                                         .putBoolean("30min_warning", b3.isChecked())
                                         .putBoolean("60min_warning", b4.isChecked())
                                         .apply();
+
+                if (!b1.isChecked()){
+                    sharedPreferences.edit().putBoolean("5_alive", false).apply();
+                }
+
+                if (!b2.isChecked()){
+                    sharedPreferences.edit().putBoolean("15_alive", false).apply();
+                }
+
+                if (!b3.isChecked()){
+                    sharedPreferences.edit().putBoolean("30_alive", false).apply();
+                }
+
+                if (!b4.isChecked()){
+                    sharedPreferences.edit().putBoolean("60_alive", false).apply();
+                }
+
             }
-
-
         };
 
         b1.setOnClickListener(notiOnClick);
