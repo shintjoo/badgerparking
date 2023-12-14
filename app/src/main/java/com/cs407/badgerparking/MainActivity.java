@@ -489,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void run() {
             try {
 
-                RssParser rssParser = new RssParser(getResources().getString(R.string.rss_url_engineering));
+                RssParser rssParser = new RssParser(getResources().getString(R.string.rss_url_local));
                 annText =
                         String.format("%s\nDate:%s\n", rssParser.getItem(0).getTitle(),
                                 rssParser.getItem(0).getPubDate());
