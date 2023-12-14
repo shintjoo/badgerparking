@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -53,6 +54,7 @@ public class SearchActivity extends AppCompatActivity {
 
         instantiateMenuBar(this);
 
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 
         ListView locationListView;
         ArrayAdapter<String> locationAdapter;
@@ -85,10 +87,30 @@ public class SearchActivity extends AppCompatActivity {
                     longitude = latLng.longitude;
                 }
 
+                double range = 0.00075;
+
+
+
                 if (placeName != null) {
-                    String restriction = dbHelper.getParkingRestriction(latitude, longitude);
+                    LatLng sw = new LatLng(latitude - range, longitude - range);
+                    LatLng ne = new LatLng(latitude + range, longitude + range);
+
+                    LatLngBounds bounds = new LatLngBounds(sw, ne);
+                    List<LatLng> coords = dbHelper.getLocationsWithinBounds(bounds);
+                    locationsList.clear();
                     // Add the selected place's name to the list
-                    locationsList.add(0,placeName+":\n" + restriction);
+                    for(int i = 0; i < coords.size(); i++) {
+                        double lat = coords.get(i).latitude;
+                        double lng = coords.get(i).longitude;
+                        List<Address> address = null;
+                        try {
+                            address = geocoder.getFromLocation(lat, lng,1);
+                        } catch (IOException e) {
+
+                        }
+
+                        locationsList.add(0, address.get(0).getAddressLine(0) + ":\n" + dbHelper.getParkingRestrictionExact(lat, lng));
+                    }
                     // Notify the adapter that the data has changed
                     locationAdapter.notifyDataSetChanged();
                 }

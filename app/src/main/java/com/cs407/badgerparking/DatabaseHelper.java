@@ -251,7 +251,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return items;
     }
 
+    @SuppressLint("Range")
+    public String getParkingRestrictionExact(double lat, double lng) {
+        String restriction = "No Data Available";
 
+        // Using hardcoded absolute path for the database
+        String DB_PATH = "/data/data/com.cs407.badgerparking/databases/parkingData.db";
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
+
+        /**
+        // Round off the coordinates to 4 decimal places
+        double roundedLat = Math.round(lat * 1000000.0) / 1000000.0;
+        double roundedLng = Math.round(lng * 1000000.0) / 1000000.0;
+
+
+
+        // Log the rounded values
+        Log.d("DatabaseHelper", "Rounded Latitude: " + roundedLat);
+        Log.d("DatabaseHelper", "Rounded Longitude: " + roundedLng);
+        **/
+        // Tolerance for the search
+        double tolerance = 0;
+
+        // Modify the SQL query to look for rounded lat/lng values within the tolerance range
+        String query = "SELECT restriction_text FROM parking_restrictions WHERE latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{
+                String.valueOf(lat - tolerance),
+                String.valueOf(lat + tolerance),
+                String.valueOf(lng - tolerance),
+                String.valueOf(lng + tolerance)});
+
+        if (cursor.moveToFirst()) {
+            restriction = cursor.getString(cursor.getColumnIndex("restriction_text"));
+            Log.d("DatabaseHelper", "Found restriction: " + restriction);  // Log the retrieved restriction
+        } else {
+            Log.d("DatabaseHelper", "No restrictions found for the given lat/lng.");
+        }
+
+        cursor.close();
+        db.close();  // Close the database connection
+        return restriction;
+    }
 
 
 
