@@ -337,13 +337,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 5, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft - (5*60);
+        Log.d("Alarm", "seconds left: " + secondsLeft + " setter: " + setter);
 
         sharedPreferences.edit().putBoolean("5_alive", true).apply();
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis()
-                        //+ (10000), //Change this line to adjust for testing, 10000 = 10 secs
-                        + setter *1000,
+                System.currentTimeMillis() + (int)(setter *1000),
                         pendingIntent);
     }
     private void cancel5Min(){

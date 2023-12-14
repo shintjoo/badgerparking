@@ -122,8 +122,8 @@
 
     <LinearLayout
         android:id="@+id/demoNotifications"
-        android:layout_width="179dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="9dp"
         android:layout_marginTop="246dp"
         android:layout_marginBottom="355dp"
@@ -137,7 +137,7 @@
         <ToggleButton
             android:id="@+id/demo10"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/notitime_toggle_button"
             android:text="10sec"
             android:textOff="10sec"
@@ -150,7 +150,7 @@
         <ToggleButton
             android:id="@+id/demo20"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/notitime_toggle_button"
             android:text="20sec"
             android:textOff="20Sec"
