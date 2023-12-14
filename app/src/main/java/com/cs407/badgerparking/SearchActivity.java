@@ -108,8 +108,10 @@ public class SearchActivity extends AppCompatActivity {
                         } catch (IOException e) {
 
                         }
-
-                        locationsList.add(0, address.get(0).getAddressLine(0) + ":\n" + dbHelper.getParkingRestrictionExact(lat, lng));
+                        String restriction = dbHelper.getParkingRestrictionExact(lat, lng);
+                        if(restriction != null) {
+                            locationsList.add(0, address.get(0).getAddressLine(0) + ":\n" + restriction);
+                        }
                     }
                     // Notify the adapter that the data has changed
                     locationAdapter.notifyDataSetChanged();
