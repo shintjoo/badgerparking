@@ -234,6 +234,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setAlarms(){
         Log.d("Alarm", "setAlarms called");
 
+        //todo used for demo, remove before release
+        if(sharedPreferences.getBoolean("10sec_demo", false)){
+            set10Demo();
+        }else if(!sharedPreferences.getBoolean("demo10_alive", true)){
+            cancel10Demo();
+        }
+
+        //todo used for demo, remove before release
+        if(sharedPreferences.getBoolean("20sec_demo", false)){
+            set20Demo();
+        }else if(!sharedPreferences.getBoolean("demo20_alive", true)){
+            cancel20Demo();
+        }
+
         if(sharedPreferences.getBoolean("5min_warning", false)&& secondsLeft > 5*60) {
             set5Min();
         }
@@ -271,6 +285,48 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         cancel15Min();
         cancel30Min();
         cancel60Min();
+    }
+
+    //todo used for demo, remove before release
+    private void set10Demo(){
+        Log.d("Alarm", "10 second alarm is set");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("time", 1);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                1, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + 10000, pendingIntent);
+    }
+
+    //todo used for demo, remove before release
+    private void cancel10Demo(){
+        Log.d("Alarm", "10 second alarm is cancelled");
+        sharedPreferences.edit().putBoolean("demo10_alive", false).apply();
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent=PendingIntent.getBroadcast(this.getApplicationContext(),
+                1, intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pendingIntent);
+    }
+
+    //todo used for demo, remove before release
+    private void set20Demo(){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("time", 2);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                2, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + 20000, pendingIntent);
+    }
+
+    //todo used for demo, remove before release
+    private void cancel20Demo(){
+        sharedPreferences.edit().putBoolean("demo10_alive", false).apply();
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                2, intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pendingIntent);
     }
 
     private void set5Min(){

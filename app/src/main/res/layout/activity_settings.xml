@@ -12,14 +12,13 @@
 
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        app:layout_constraintBottom_toBottomOf="@id/frame"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        tools:ignore="VisualLintBottomNav"
-        tools:layout_editor_absoluteY="656dp">
+        tools:ignore="VisualLintBottomNav">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
@@ -53,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/notEnabledGreen"
-        android:padding="2sp"
         android:orientation="horizontal"
+        android:padding="2sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,6 +106,55 @@
             android:textOff="1 hr"
             android:textOn="1 hr" />
 
+    </LinearLayout>
+
+    <!-- These settings are used as a part of the demo and would removed before the app is released -->
+    <TextView
+        android:id="@+id/demoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="205dp"
+        android:text="Demo Notifications"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/demoNotifications"
+        android:layout_width="179dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="246dp"
+        android:layout_marginBottom="355dp"
+        android:background="@color/notEnabledGreen"
+        android:orientation="horizontal"
+        android:padding="2sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="@+id/demoText"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ToggleButton
+            android:id="@+id/demo10"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/notitime_toggle_button"
+            android:text="10sec"
+            android:textOff="10sec"
+            android:textOn="10sec" />
+
+        <Space
+            android:layout_width="2sp"
+            android:layout_height="match_parent"/>
+
+        <ToggleButton
+            android:id="@+id/demo20"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/notitime_toggle_button"
+            android:text="20sec"
+            android:textOff="20Sec"
+            android:textOn="20sec" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

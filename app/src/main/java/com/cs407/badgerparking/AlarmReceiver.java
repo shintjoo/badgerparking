@@ -16,6 +16,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d("alarm", "alarm gen triggered");
         Log.d("alarm", "get int extra: " + intent.getIntExtra("time", -1));
 
+        //todo used for demo, remove before release
+        if(intent.getIntExtra("time", 0) ==1){
+            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "10 second demo");
+            NotificationHelper.getInstance().showNotification(context, "channel_reminders");
+        }
+
+        //todo used for demo, remove before release
+        if(intent.getIntExtra("time", 0) == 2){
+            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "20 second demo");
+            NotificationHelper.getInstance().showNotification(context, "channel_reminders");
+        }
+
         if(intent.getIntExtra("time", 0) == 5){
             //trigger 5 minute notification
             Log.d("Alarm", "5 Minute Alarm!!");

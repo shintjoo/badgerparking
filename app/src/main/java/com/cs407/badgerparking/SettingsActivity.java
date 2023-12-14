@@ -4,10 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.service.notification.NotificationListenerService;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,6 +18,9 @@ public class SettingsActivity extends AppCompatActivity {
     ToggleButton b3;
     ToggleButton b4;
 
+    ToggleButton demo10; //todo used for demo, remove before release
+    ToggleButton demo20; //todo used for demo, remove before release
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
         instantiateMenuBar(this);
         setupNotiBar();
     }
+
 
     private void setupNotifications(){
         NotificationHelper.getInstance().createRemindNotificationChannel(getApplicationContext());
@@ -56,11 +58,24 @@ public class SettingsActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean("60min_warning", false)){
             b4.setChecked(true);
         }
+
+        //todo used for demo, remove before release
+        demo10 = findViewById(R.id.demo10);
+        demo20 = findViewById(R.id.demo20);
+        if(sharedPreferences.getBoolean("10sec_demo", false)){
+            demo10.setChecked(true);
+        }
+        if(sharedPreferences.getBoolean("20sec_demo", false)){
+            demo20.setChecked(true);
+        }
+
+
         notiBarClickManager();
     }
 
     public void notiBarClickManager(){
         View.OnClickListener notiOnClick = new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
@@ -89,6 +104,17 @@ public class SettingsActivity extends AppCompatActivity {
                     sharedPreferences.edit().putBoolean("60_alive", false).apply();
                 }
 
+                //todo used for demo, remove before release
+                sharedPreferences.edit().putBoolean("10sec_demo", demo10.isChecked())
+                        .putBoolean("20sec_demo", demo20.isChecked()).apply();
+
+                if(!demo10.isChecked()){
+                    sharedPreferences.edit().putBoolean("demo10_alive", false).apply();
+                }
+                if(!demo20.isChecked()){
+                    sharedPreferences.edit().putBoolean("demo20_alive", false).apply();;
+                }
+
             }
         };
 
@@ -96,7 +122,12 @@ public class SettingsActivity extends AppCompatActivity {
         b2.setOnClickListener(notiOnClick);
         b3.setOnClickListener(notiOnClick);
         b4.setOnClickListener(notiOnClick);
+
+        //todo used for demo, remove before release
+        demo10.setOnClickListener(notiOnClick);
+        demo20.setOnClickListener(notiOnClick);
     }
+
 
     /*
      * ==================================================
