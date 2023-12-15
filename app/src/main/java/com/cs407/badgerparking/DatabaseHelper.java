@@ -113,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String DB_PATH = "/data/data/com.cs407.badgerparking/databases/parkingData.db";
         SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
 
-        // Round off the coordinates to 4 decimal places
+        // Round off the coordinates to 6 decimal places
         double roundedLat = Math.round(lat * 1000000.0) / 1000000.0;
         double roundedLng = Math.round(lng * 1000000.0) / 1000000.0;
 
@@ -207,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     selectionArgs, // Selection arguments
                     null, // Group by
                     null, // Having
-                    null  // Order by
+                    "latitude LIMIT 10"  // Order by
             );
 
             // Iterate over the result set and build the list of LatLng objects
