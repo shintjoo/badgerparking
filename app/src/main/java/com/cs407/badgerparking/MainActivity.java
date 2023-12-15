@@ -252,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             set5Min();
         }
         else if(!sharedPreferences.getBoolean("5_alive", true)){
-            Log.d("Alarm", "cancel 5 min called, sharedPref is " + sharedPreferences.getBoolean("5min_warning", false) + " secondsLeft is " + secondsLeft);
             cancel5Min();
         }
 
@@ -301,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //todo used for demo, remove before release
     private void cancel10Demo(){
-        Log.d("Alarm", "10 second alarm is cancelled");
         sharedPreferences.edit().putBoolean("demo10_alive", false).apply();
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent=PendingIntent.getBroadcast(this.getApplicationContext(),
@@ -311,7 +309,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //todo used for demo, remove before release
     private void set20Demo(){
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Log.d("Alarm", "20 second alarm is set");
+        Intent intent = new Intent(this, AlarmReceiverTwo.class);
         intent.putExtra("time", 2);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 2, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -323,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //todo used for demo, remove before release
     private void cancel20Demo(){
         sharedPreferences.edit().putBoolean("demo10_alive", false).apply();
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, AlarmReceiverTwo.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 2, intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
@@ -333,11 +332,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d("Alarm", "5 min alarm set");
         Intent intent = new Intent(this, fiveMinReceiver.class);
         intent.putExtra("time", 5);
-        Log.d("alarm", "set5Min intent is  " + intent.getIntExtra("time", -1));
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 5, intent, PendingIntent.FLAG_IMMUTABLE);
         long setter = secondsLeft - (5*60);
-        Log.d("Alarm", "seconds left: " + secondsLeft + " setter: " + setter);
 
         sharedPreferences.edit().putBoolean("5_alive", true).apply();
 
@@ -346,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         pendingIntent);
     }
     private void cancel5Min(){
-        Log.d("Alarm", "Cancelled 5 min alarm");
         sharedPreferences.edit().putBoolean("5_alive", false).apply();
         Intent intent = new Intent(this, fiveMinReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
