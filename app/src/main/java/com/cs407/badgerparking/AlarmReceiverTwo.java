@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class AlarmReceiverTwo extends BroadcastReceiver {
 
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
@@ -17,8 +17,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d("alarm", "get int extra: " + intent.getIntExtra("time", -1));
 
 
-            NotificationHelper.getInstance().setNotificationContent("BadgerParking", "10 second demo");
-            NotificationHelper.getInstance().showNotification(context, "channel_reminders");
+        NotificationHelper.getInstance().setNotificationContent("BadgerParking", "20 second demo");
+        NotificationHelper.getInstance().showNotification(context, "channel_reminders");
 
 
 
