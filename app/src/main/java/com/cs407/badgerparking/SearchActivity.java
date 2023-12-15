@@ -98,6 +98,7 @@ public class SearchActivity extends AppCompatActivity {
                     LatLngBounds bounds = new LatLngBounds(sw, ne);
                     List<LatLng> coords = dbHelper.getLocationsWithinBounds(bounds);
                     locationsList.clear();
+
                     // Add the selected place's name to the list
                     for(int i = 0; i < coords.size(); i++) {
                         double lat = coords.get(i).latitude;
