@@ -17,6 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/demoNotifications"
         app:menu="@menu/bottom_nav_menu"
         tools:ignore="VisualLintBottomNav">
 
@@ -46,16 +47,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsTitle" />
 
+    <!-- These settings are used as a part of the demo and would removed before the app is released -->
     <LinearLayout
         android:id="@+id/notiButtonHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:background="@color/notEnabledGreen"
         android:orientation="horizontal"
         android:padding="2sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.387"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notiSetSubTitle">
 
@@ -108,7 +110,6 @@
 
     </LinearLayout>
 
-    <!-- These settings are used as a part of the demo and would removed before the app is released -->
     <TextView
         android:id="@+id/demoText"
         android:layout_width="wrap_content"
@@ -124,9 +125,10 @@
         android:id="@+id/demoNotifications"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="246dp"
-        android:layout_marginBottom="355dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="232dp"
+
+        android:layout_marginBottom="367dp"
         android:background="@color/notEnabledGreen"
         android:orientation="horizontal"
         android:padding="2sp"
@@ -145,7 +147,7 @@
 
         <Space
             android:layout_width="2sp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <ToggleButton
             android:id="@+id/demo20"

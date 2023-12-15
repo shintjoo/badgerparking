@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void set5Min(){
         Log.d("Alarm", "5 min alarm set");
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, fiveMinReceiver.class);
         intent.putExtra("time", 5);
         Log.d("alarm", "set5Min intent is  " + intent.getIntExtra("time", -1));
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
@@ -342,19 +342,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPreferences.edit().putBoolean("5_alive", true).apply();
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + (int)(setter *1000),
+                System.currentTimeMillis() + (int)(setter*1000),
                         pendingIntent);
     }
     private void cancel5Min(){
         Log.d("Alarm", "Cancelled 5 min alarm");
         sharedPreferences.edit().putBoolean("5_alive", false).apply();
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, fiveMinReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 5 , intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
     }
     private void set15Min(){
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, fifteenMinReceiver.class);
         intent.putExtra("time", 15);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 15, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -365,18 +365,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() +
-                 setter *1000, pendingIntent);
+                        (int)(setter *1000), pendingIntent);
     }
     private void cancel15Min(){
         sharedPreferences.edit().putBoolean("15_alive", false).apply();
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, fifteenMinReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 15 , intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
 
     }
     private void set30Min(){
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, thirtyMinReceiver.class);
         intent.putExtra("time", 30);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 30, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -386,18 +386,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + setter *1000, pendingIntent);
+                System.currentTimeMillis() + (int)(setter *1000), pendingIntent);
     }
     private void cancel30Min(){
         sharedPreferences.edit().putBoolean("5_alive", false).apply();
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, thirtyMinReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 30, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
     }
     private void set60Min(){
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, sixtyMinReceiver.class);
         intent.putExtra("time", 60);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 60, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -406,11 +406,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPreferences.edit().putBoolean("60_alive", true).apply();
 
         alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + setter *1000, pendingIntent);
+                System.currentTimeMillis() + (int)(setter *1000), pendingIntent);
     }
     private void cancel60Min(){
         sharedPreferences.edit().putBoolean("5_alive", false).apply();
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, sixtyMinReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
                 60, intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(pendingIntent);
