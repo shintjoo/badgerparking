@@ -3,6 +3,8 @@ Most Recent on top
 
 Project Log:
 
+--12/14/2023 - Fixed issues with notifications not being distinguished from each other once being trigger (Daniel)
+
 --12/14/2023 - Added in quick notifications that can be used during the demo, they are tagged with todo since they should be removed if this app were ever to be released (Daniel)
 
 --12/10/2023 - Map activity complete (Brian)
